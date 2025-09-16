@@ -13,6 +13,10 @@ export default function Home() {
 
   const isLoggedIn = !!token;
 
+
+  //logout should refresh the page to update the nav links
+  // should logout be a button that calls an action to logout and then refresh the page?
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -36,6 +40,7 @@ export default function Home() {
                 Search
               </Link>
             </>
+
           )}
 
         </nav>
