@@ -34,7 +34,21 @@
   grid-row-start: 2;
 }
 
-.main ol {
+.navLinks {
+  display: flex;
+  gap: 40px;
+  /* spacing between links */
+  justify-content: center;
+}
+
+.navLinks a {
+  text-decoration: none;
+  color: inherit;
+  /* respects black or white text based on theme */
+  font-weight: 500;
+}
+
+.main ul {
   font-family: var(--font-geist-mono);
   padding-left: 0;
   margin: 0;
