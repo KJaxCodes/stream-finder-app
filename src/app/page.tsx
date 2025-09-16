@@ -14,12 +14,12 @@ export default function Home() {
           priority
         />
         <h1>Streamfinder App</h1>
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <ul>
+          <li>Sign up and log in to your account.</li>
+          <li>View and edit your profile information.</li>
+          <li>Search for movies and where to stream them.</li>
+          <li>Save your favorite movies to your watchlist.</li>
+        </ul>
 
         <div className={styles.ctas}>
           <a
@@ -89,6 +89,11 @@ export default function Home() {
             height={16}
           />
           Go to nextjs.org →
+        </a>
+        <a
+          href="https://www.watchmode.com"
+        >
+          Streaming data powered by Watchmode.com
         </a>
       </footer>
     </div>
