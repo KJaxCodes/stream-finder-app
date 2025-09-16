@@ -2,7 +2,7 @@
 //then backend will create user
 //then frontend will redirect to login page
 //then user can login with the token
-//then frontend will store the token in local storage - local storage?
+//then frontend will store the token in cookies
 //then frontend will redirect to home page
 //then user can access protected routes with the token
 

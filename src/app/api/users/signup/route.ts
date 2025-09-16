@@ -1,7 +1,7 @@
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
-import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { isEmail } from "validator";
 
 // Error handling for unique email is managed in the signup logic
