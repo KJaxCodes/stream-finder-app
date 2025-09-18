@@ -23,15 +23,15 @@ export function middleware(request: NextRequest) {
             console.log("Token found, verifying...");
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
             return NextResponse.next();
-        } catch (err: any) {
+        } catch (error: any) {
             // Invalid token, redirect to login
-            console.log("Authentication error:", err.message);
-            return NextResponse.redirect(new URL('/login', request.url));
-        } 
-    } else {
-            // No token, redirect to login
-            console.log("No token found, redirecting to login");
+            console.log("Authentication error:", error.message);
             return NextResponse.redirect(new URL('/login', request.url));
         }
+    } else {
+        // No token, redirect to login
+        console.log("No token found, redirecting to login");
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
 
 }
