@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation"; //useRouter is used to navigate bet
 import axios from "axios"; //axios is used to make API calls
 
 
+
 export default function SignupPage() {
     const router = useRouter();
     const [user, setUser] = React.useState({
