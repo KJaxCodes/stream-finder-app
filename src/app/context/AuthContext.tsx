@@ -76,6 +76,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement signup logic here
+      const res = await axios.post('/api/users/signup', { email, password });
       // await axios.post('/api/users/signup', { email, password });
       dispatch({ type: 'SIGNUP_SUCCESS', payload: { loading: false, error: null } });
     } catch (error: unknown) {
@@ -90,7 +91,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       // implement login logic here
       // const res = await axios.post('/api/users/login', { email, password });
       // const user: User = res.data;
-      const mockUser: User = { id: '1', email:"user@mail.com" }; // mock user for demonstration
+      const mockUser: User = { id: '1', email: "user@mail.com" }; // mock user for demonstration
       dispatch({ type: 'LOGIN_SUCCESS', payload: { user: mockUser, loading: false, error: null } });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";

@@ -61,8 +61,8 @@ const SignupComponent: React.FC<{}> = () => {
         if (name === "password") {
             if (value.length === 0) {
                 passwordError = "Password is required";
-            } else if (value.length < 6) {
-                passwordError = "Password must be at least 6 characters";
+            } else if (value.length < 8) {
+                passwordError = "Password must be at least 8 characters";
             } else {
                 passwordError = null;
             }
