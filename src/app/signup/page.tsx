@@ -61,7 +61,7 @@ export default function SignupPage() {
             <Row className="justify-content-md-center">
 
                 <Col xs lg="2">
-                    
+                        
                 </Col>
                 <Col md="auto">
                     <SignupComponent />
