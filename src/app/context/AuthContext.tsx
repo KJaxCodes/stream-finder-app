@@ -18,15 +18,16 @@ type AuthState = {
 }
 
 // actions
-type LoginRequest = { type: 'LOGIN_REQUEST'; payload: { loading: boolean } };
-type SignupRequest = { type: 'SIGNUP_REQUEST'; payload: { loading: boolean } };
+// type LoginRequest = { type: 'LOGIN_REQUEST'; payload: { loading: boolean } };
+// type SignupRequest = { type: 'SIGNUP_REQUEST'; payload: { loading: boolean } };
+type AuthRequest = { type: 'AUTH_REQUEST'; payload: { loading: boolean, error: null } };
 type LoginSuccess = { type: 'LOGIN_SUCCESS'; payload: { user: User; loading: boolean; error: null } };
 type SignupSuccess = { type: 'SIGNUP_SUCCESS'; payload: { loading: boolean; error: null } };
-type Logout = { type: 'LOGOUT'; payload: { loading: boolean; error: null } };
+type Logout = { type: 'LOGOUT'; payload: { loading: boolean; user: null; error: null } };
 type AuthError = { type: 'AUTH_ERROR'; payload: { loading: boolean; error: string } };
 
 // union type for all actions
-type AuthAction = LoginRequest | SignupRequest | LoginSuccess | SignupSuccess | Logout | AuthError;
+type AuthAction = AuthRequest | LoginSuccess | SignupSuccess | Logout | AuthError;
 
 const initialState: AuthState = {
   user: null,
@@ -38,10 +39,7 @@ const initialState: AuthState = {
 // reducer function to handle state changes based on actions
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case 'LOGIN_REQUEST': {
-      return { ...state, ...action.payload }
-    }
-    case 'SIGNUP_REQUEST': {
+    case 'AUTH_REQUEST': {
       return { ...state, ...action.payload }
     }
     case 'LOGIN_SUCCESS': {
@@ -56,8 +54,6 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
     case 'AUTH_ERROR': {
       return { ...state, ...action.payload, user: null }
     }
-
-
     default:
       return state;
   }
@@ -67,24 +63,20 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 interface IAuthInterface extends AuthState {
   dispatchSignup: (email: string, password: string) => Promise<void>;
   dispatchLogin: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  dispatchLogout: () => Promise<void>;
 }
 
-// create context
-const AuthContext = createContext<IAuthInterface | null>(null);
+export const AuthContext = createContext<IAuthInterface | null>(null);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(authReducer, { ...initialState });
 
-  // check if user is logged in on initial load
-
-
-  // context value functions
+  // context functions
   async function dispatchSignup(email: string, password: string) {
     try {
-      dispatch({ type: 'SIGNUP_REQUEST', payload: { loading: true } });
+      dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement signup logic here
-      await axios.post('/api/users/signup', { email, password });
+      // await axios.post('/api/users/signup', { email, password });
       dispatch({ type: 'SIGNUP_SUCCESS', payload: { loading: false, error: null } });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
@@ -94,22 +86,24 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   async function dispatchLogin(email: string, password: string) {
     try {
-      dispatch({ type: 'LOGIN_REQUEST', payload: { loading: true } });
+      dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement login logic here
-      const res = await axios.post('/api/users/login', { email, password });
-      const user: User = res.data;
-      dispatch({ type: 'LOGIN_SUCCESS', payload: { user, loading: false, error: null } });
+      // const res = await axios.post('/api/users/login', { email, password });
+      // const user: User = res.data;
+      const mockUser: User = { id: '1', email:"user@mail.com" }; // mock user for demonstration
+      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: mockUser, loading: false, error: null } });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
       dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message } });
     }
   }
 
-  async function logout() {
+  async function dispatchLogout() {
     try {
       // implement logout logic here
       await axios.post('/api/users/logout');
-      dispatch({ type: 'LOGOUT', payload: { loading: false, error: null } });
+      dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
+      dispatch({ type: 'LOGOUT', payload: { loading: false, user: null, error: null } });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
       dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message } });
@@ -118,11 +112,18 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, dispatchLogin, dispatchSignup, logout }}>
+      value={{ ...state, dispatchLogin, dispatchSignup, dispatchLogout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
+export const useAuthContext = (): IAuthInterface => {
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext could not be loaded at {AuthContext.tsx}");
+  }
+  return authContext;
+}
 export default AuthProvider;
 
