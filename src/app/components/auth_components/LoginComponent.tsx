@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import router from 'next/router';
 // Auth context
 import { useAuthContext } from '@/app/context/AuthContext';
 // Bootstrap form component for signup page
@@ -9,6 +8,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Link from 'next/link';
+import { routerServerGlobal } from 'next/dist/server/lib/router-utils/router-server-context';
+import router from 'next/router';
+
+
+
 
 
 type FormState = {
@@ -19,7 +23,7 @@ type FormState = {
     errors: string[] | null;
 }
 
-const SignupComponent: React.FC<{}> = () => {
+const LoginComponent: React.FC<{}> = () => {
 
     //local form state
     const [formState, setFormState] = React.useState<FormState>({ email: "", password: "", emailError: null, passwordError: null, errors: null });
@@ -28,7 +32,7 @@ const SignupComponent: React.FC<{}> = () => {
 
     // Function to handle signup
 
-    const handleSignupButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleLoginButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const { email, password, errors } = formState;
 
         // handle client validation errors
@@ -37,9 +41,10 @@ const SignupComponent: React.FC<{}> = () => {
             console.log("Client validation errors:", errors);
             return;
         }
-        dispatchSignup(email, password);
-        // Redirect to login page after successful signup
-        // router.push('/login');
+        dispatchLogin(email, password);
+        // Redirect to home page after successful login
+        // router.push('/');
+
     };
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +66,6 @@ const SignupComponent: React.FC<{}> = () => {
         if (name === "password") {
             if (value.length === 0) {
                 passwordError = "Password is required";
-            } else if (value.length < 8) {
-                passwordError = "Password must be at least 8 characters";
             } else {
                 passwordError = null;
             }
@@ -115,13 +118,13 @@ const SignupComponent: React.FC<{}> = () => {
                     </Form.Control.Feedback>
                 </InputGroup>
             </Form.Group>
-            <Button variant="primary" onClick={handleSignupButtonClick}>
+            <Button variant="primary" onClick={handleLoginButtonClick}>
                 Submit
             </Button>
             <br />
-            <Link href="/login">Already have an account? Visit Login Page</Link>
+            <Link href="/signup">Don't have an account? Visit Signup Page</Link>
         </Form>
     );
 };
 
-export default SignupComponent;
+export default LoginComponent;

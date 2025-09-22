@@ -89,10 +89,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement login logic here
-      // const res = await axios.post('/api/users/login', { email, password });
-      // const user: User = res.data;
-      const mockUser: User = { id: '1', email: "user@mail.com" }; // mock user for demonstration
-      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: mockUser, loading: false, error: null } });
+      const res = await axios.post('/api/users/login', { email, password });
+      const user: User = res.data;
+      // const mockUser: User = { id: '1', email: "user@mail.com" }; // mock user for demonstration
+      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: user, loading: false, error: null } });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
       dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message } });

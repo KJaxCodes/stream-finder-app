@@ -6,7 +6,7 @@ import { isEmail } from "validator";
 
 // Error handling for unique email is managed in the signup logic
 // Error handling for password length is managed in the signup logic
-
+// Redirect to login page after successful signup
 
 connect();
 

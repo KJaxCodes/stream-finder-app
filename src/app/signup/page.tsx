@@ -3,7 +3,6 @@
 // React imports
 import React, { useEffect } from "react";
 // Next.js imports
-import Link from "next/link"; //link is used to navigate between pages
 import { useRouter } from "next/navigation"; //useRouter is used to navigate between pages programmatically
 // React bootstrap imports
 import Container from "react-bootstrap/Container";
@@ -13,9 +12,6 @@ import Col from "react-bootstrap/Col";
 import { useAuthContext } from "../context/AuthContext";
 // Additional Components
 import SignupComponent from "../components/auth_components/SignupComponent";
-// Axios import
-import axios from "axios"; //axios is used to make API calls
-import { Sign } from "crypto";
 
 
 //from frontend need to grab data and send to backend to create user
@@ -61,7 +57,7 @@ export default function SignupPage() {
             <Row className="justify-content-md-center">
 
                 <Col xs lg="2">
-                        
+
                 </Col>
                 <Col md="auto">
                     <SignupComponent />
