@@ -40,8 +40,7 @@ const LoginComponent: React.FC<{}> = () => {
         const success = await dispatchLogin(email, password);
 
         if (success) {
-            // Redirect to home page after successful login
-            router.push('/home');
+            // Handle successful login
             console.log("Login successful");
         } else {
             //handle failed login
