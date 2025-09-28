@@ -1,49 +1,17 @@
-//use client directive is needed to use useState and useEffect
-"use client";
-//import necessary libraries and components
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation"; //useRouter is used to navigate between pages programmatically
-import axios from "axios"; //axios is used to make API calls
+// React imports
+import React from "react";
+// React bootstrap imports
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+// Additional Components
 import LoginComponent from "../components/auth_components/LoginComponent";
 
 
 export default function LoginPage() {
-    const router = useRouter();
-   
-    // State to manage button disabled status
-    // const [buttonDisabled, setButtonDisabled] = React.useState(false);
-    // State to manage loading and error messages
-    // const [loading, setLoading] = React.useState(false);
-    // const [error, setError] = React.useState<string | null>(null);
-
-    // const onLogin = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await axios.post('/api/users/login', user);
-    //         console.log("Login success:", response.data);
-    //         router.push('/');
-    //     } catch (error: any) {
-    //         console.log("Error during login:", error);
-    //         setError(error.response?.data?.message || 'An error occurred during login');
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (user.email.length > 0 && user.password.length > 0) {
-    //         setButtonDisabled(false);
-    //     } else {
-    //         setButtonDisabled(true);
-    //     }
-    // }, [user]);
-
     return (
         <>
             <Row className="justify-content-md-center">
-                <Col xs lg="12">
+                <Col xs lg="12" style={{ textAlign: 'center' }}>
                     <h1>Login</h1>
                 </Col>
             </Row>

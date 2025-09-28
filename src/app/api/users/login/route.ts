@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
         console.log("Run the login route");
         const reqBody = await request.json();
         const { email, password } = reqBody;
-        console.log(reqBody);
 
         // Check if user exists
         const user = await User.findOne({ email });
@@ -45,6 +44,7 @@ export async function POST(request: NextRequest) {
 
 
     } catch (error: any) {
+        console.log("Error in login route:", error);
         return NextResponse.json({ message: error.message, user: null, success: false }, { status: 500 });
     }
 }

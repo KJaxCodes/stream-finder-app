@@ -20,8 +20,8 @@ export default async function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>Streamfinder</h1>
-        <nav className={styles.navLinks}>
+        <h1>Streamfinder / page</h1>
+        {/* <nav className={styles.navLinks}>
           {!isLoggedIn ? (
             <>
               <Link href="/signup">
@@ -43,13 +43,13 @@ export default async function Home() {
 
           )}
 
-        </nav>
-        <ul>
+        </nav> */}
+        {/* <ul>
           <li>Sign up and log in to your account.</li>
           <li>View and edit your profile information.</li>
           <li>Search for movies and where to stream them.</li>
           <li>Save your favorite movies to your watchlist.</li>
-        </ul>
+        </ul> */}
 
 
       </main>

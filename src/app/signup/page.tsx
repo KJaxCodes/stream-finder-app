@@ -1,15 +1,8 @@
-//use client directive is needed to use useState and useEffect
-"use client";
 // React imports
-import React, { useEffect } from "react";
-// Next.js imports
-import { useRouter } from "next/navigation"; //useRouter is used to navigate between pages programmatically
+import React from "react";
 // React bootstrap imports
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-// Auth Context
-import { useAuthContext } from "../context/AuthContext";
 // Additional Components
 import SignupComponent from "../components/auth_components/SignupComponent";
 
@@ -23,34 +16,10 @@ import SignupComponent from "../components/auth_components/SignupComponent";
 //then user can access protected routes with the token
 
 export default function SignupPage() {
-    const router = useRouter();
-
-    // State to manage button disabled status
-    //const [buttonDisabled, setButtonDisabled] = React.useState(false);
-    // State to manage loading and error messages
-    // const [loading, setLoading] = React.useState(false);
-    // const [error, setError] = React.useState<string | null>(null);
-
-
-
-    // useEffect(() => {
-    //     if (formState.email.length > 0 && formState.password.length > 0) {
-    //         setButtonDisabled(false);
-    //     } else {
-    //         setButtonDisabled(true);
-    //     }
-    // }, [formState]);
-
-    // useEffect(() => {
-    //     console.log(`User: ${user}, Loading: ${loading}, Error: ${error}`);
-    // }, [user, loading, error]);
-
-
-
     return (
         <>
             <Row className="justify-content-md-center">
-                <Col xs lg="12">
+                <Col xs lg="12" style={{ textAlign: 'center' }}>
                     <h1>Signup</h1>
                 </Col>
             </Row>

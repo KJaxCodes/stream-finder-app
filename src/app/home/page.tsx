@@ -1,9 +1,13 @@
-//use client directive is needed to use useState and useEffect
-"use client";
-//import necessary libraries and components
-import styles from "./page.module.css";
-import Link from "next/link";
+//
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+// React imports
+import React from "react";
+// additional components
+import UsersNav from "../components/navbars/UsersNav";
+// styles
+import styles from "../page.module.css";
+
 
 
 
@@ -13,7 +17,14 @@ export default async function Home() {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
-    const isLoggedIn = !!token;
+    // If no token is found, redirect to the login page
+    if (!token) {
+        redirect('/login');
+    }
+
+    // TODO: check if token is valid
+
+    // const isLoggedIn = !!token;
 
 
     //logout should refresh the page to update the nav links
@@ -22,38 +33,14 @@ export default async function Home() {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
-                <h1>Streamfinder</h1>
-                <nav className={styles.navLinks}>
-                    {!isLoggedIn ? (
-                        <>
-                            <Link href="/signup">
-                                Sign Up
-                            </Link>
-                            <Link href="/login">
-                                Log In
-                            </Link>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/profile">
-                                Profile
-                            </Link>
-                            <Link href="/search">
-                                Search
-                            </Link>
-                        </>
-
-                    )}
-
-                </nav>
+                <UsersNav />
+                <h1>Streamfinder Homepage for Logged In Users Only</h1>
                 <ul>
                     <li>Sign up and log in to your account.</li>
                     <li>View and edit your profile information.</li>
                     <li>Search for movies and where to stream them.</li>
                     <li>Save your favorite movies to your watchlist.</li>
                 </ul>
-
-
             </main>
             <footer className={styles.footer}>
                 <a
