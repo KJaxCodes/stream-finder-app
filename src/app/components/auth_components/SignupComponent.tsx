@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import router from 'next/router';
+// Client side router
+import { useRouter } from 'next/navigation';
 // Auth context
 import { useAuthContext } from '@/app/context/AuthContext';
 // Bootstrap form component for signup page
@@ -9,7 +10,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Link from 'next/link';
-
 
 type FormState = {
     email: string;
@@ -20,14 +20,14 @@ type FormState = {
 }
 
 const SignupComponent: React.FC<{}> = () => {
-
+    // Next router
+    const router = useRouter();
     //local form state
     const [formState, setFormState] = React.useState<FormState>({ email: "", password: "", emailError: null, passwordError: null, errors: null });
-
+    // global auth context
     const { dispatchLogin, dispatchSignup, loading, error } = useAuthContext();
 
     // Function to handle signup
-
     const handleSignupButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const { email, password, errors } = formState;
 
@@ -37,9 +37,16 @@ const SignupComponent: React.FC<{}> = () => {
             console.log("Client validation errors:", errors);
             return;
         }
-        dispatchSignup(email, password);
-        // Redirect to login page after successful signup
-        // router.push('/login');
+        const success = await dispatchSignup(email, password);
+        if (success) {
+            // Redirect to login page after successful signup
+            router.push('/login');
+        } else {
+            //handle failed signup
+            console.log("Signup failed");
+            // errors are handled in the context
+            console.log(error);
+        }
     };
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {

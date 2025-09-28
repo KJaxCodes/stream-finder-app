@@ -8,10 +8,11 @@ import { isEmail } from "validator";
 // Error handling for password length is managed in the signup logic
 // Redirect to login page after successful signup
 
-connect();
 
 export async function POST(request: NextRequest) {
     try {
+        await connect();
+        console.log("Run the signup route");
         const reqBody = await request.json();
         const { email, password } = reqBody;
         console.log(reqBody);

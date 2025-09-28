@@ -2,13 +2,12 @@ import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt  from "jsonwebtoken";
-
-
-connect();
+import jwt from "jsonwebtoken";
 
 export async function POST(request: NextRequest) {
     try {
+        await connect();
+        console.log("Run the login route");
         const reqBody = await request.json();
         const { email, password } = reqBody;
         console.log(reqBody);
@@ -26,25 +25,26 @@ export async function POST(request: NextRequest) {
         }
 
         // create token data
-        const tokenData = { 
-            id: user._id, 
-            email: user.email 
+        const tokenData: { id: string; email: string } = {
+            id: String(user._id),
+            email: user.email
         };
 
         // create token
-        const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, { expiresIn: '1d' });
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET!, { expiresIn: '1d' });
 
         const response = NextResponse.json({
             message: 'Login successful',
+            user: tokenData,
             success: true,
         })
 
         response.cookies.set('token', token, { httpOnly: true });
 
         return response;
-        
+
 
     } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+        return NextResponse.json({ message: error.message, user: null, success: false }, { status: 500 });
     }
 }

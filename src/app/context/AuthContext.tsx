@@ -1,9 +1,9 @@
 'use client';
 
-// imports
 import React, { createContext, useContext, useState, useEffect, useReducer } from 'react';
 import type { ReactNode } from 'react';
-import axios from 'axios';
+//api functions
+import { handleLogin, handleSignup } from '../components/auth_components/frontend_api_components/authFunctions';
 
 // types
 type User = {
@@ -30,11 +30,8 @@ type AuthError = { type: 'AUTH_ERROR'; payload: { loading: boolean; error: strin
 type AuthAction = AuthRequest | LoginSuccess | SignupSuccess | Logout | AuthError;
 
 const initialState: AuthState = {
-  user: null,
-  loading: false,
-  error: null
-}
-
+  user: null, loading: false, error: null
+};
 
 // reducer function to handle state changes based on actions
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
@@ -61,8 +58,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 
 // context interface definition
 interface IAuthInterface extends AuthState {
-  dispatchSignup: (email: string, password: string) => Promise<void>;
-  dispatchLogin: (email: string, password: string) => Promise<void>;
+  dispatchSignup: (email: string, password: string) => Promise<boolean>;
+  dispatchLogin: (email: string, password: string) => Promise<boolean>;
   dispatchLogout: () => Promise<void>;
 }
 
@@ -72,38 +69,56 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, { ...initialState });
 
   // context functions
-  async function dispatchSignup(email: string, password: string) {
+  async function dispatchSignup(email: string, password: string): Promise<boolean> {
     try {
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement signup logic here
-      const res = await axios.post('/api/users/signup', { email, password });
-      // await axios.post('/api/users/signup', { email, password });
+      const success = await handleSignup(email, password);
+      // signup failed, don't have validations yet (probably a duplicate user, fix later)
+      if (!success) {
+        dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: "Signup failed" } });
+        return false;
+      }
+      // signup successful
       dispatch({ type: 'SIGNUP_SUCCESS', payload: { loading: false, error: null } });
+      // we should redirect to login page after signup, but can't do that here
+      return true;
     } catch (error: unknown) {
+      // any unexpected errors
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
       dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message } });
+      return false;
     }
   }
 
-  async function dispatchLogin(email: string, password: string) {
+  async function dispatchLogin(email: string, password: string): Promise<boolean> {
     try {
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement login logic here
-      const res = await axios.post('/api/users/login', { email, password });
-      const user: User = res.data;
+      // const res = await axios.post('/api/users/login', { email, password });
+      // const user: User = res.data;
+      const { success, user, message } = await handleLogin(email, password);
       // const mockUser: User = { id: '1', email: "user@mail.com" }; // mock user for demonstration
+      if (!success || !user) {
+        dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message || "Login failed" } });
+        return false;
+      }
+      // login successful
       dispatch({ type: 'LOGIN_SUCCESS', payload: { user: user, loading: false, error: null } });
+      return true;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
       dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message } });
+      return false;
     }
   }
 
   async function dispatchLogout() {
     try {
-      // implement logout logic here
-      await axios.post('/api/users/logout');
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
+      // implement logout logic here
+      // await axios.post('/api/users/logout');
+
       dispatch({ type: 'LOGOUT', payload: { loading: false, user: null, error: null } });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";

@@ -1,6 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
+// Client side router
+import { useRouter } from 'next/navigation';
 // Auth context
 import { useAuthContext } from '@/app/context/AuthContext';
 // Bootstrap form component for signup page
@@ -8,12 +10,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Link from 'next/link';
-import { routerServerGlobal } from 'next/dist/server/lib/router-utils/router-server-context';
-import router from 'next/router';
-
-
-
-
 
 type FormState = {
     email: string;
@@ -24,14 +20,14 @@ type FormState = {
 }
 
 const LoginComponent: React.FC<{}> = () => {
-
+    // Next router
+    const router = useRouter();
     //local form state
     const [formState, setFormState] = React.useState<FormState>({ email: "", password: "", emailError: null, passwordError: null, errors: null });
+    // global auth context
+    const { dispatchLogin, dispatchSignup, loading, error, user } = useAuthContext();
 
-    const { dispatchLogin, dispatchSignup, loading, error } = useAuthContext();
-
-    // Function to handle signup
-
+    // Function to handle login
     const handleLoginButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const { email, password, errors } = formState;
 
@@ -41,10 +37,17 @@ const LoginComponent: React.FC<{}> = () => {
             console.log("Client validation errors:", errors);
             return;
         }
-        dispatchLogin(email, password);
-        // Redirect to home page after successful login
-        // router.push('/');
-
+        const success = await dispatchLogin(email, password);
+        if (success) {
+            // Redirect to home page after successful login
+            // router.push('/');
+            console.log("Login successful");
+        } else {
+            //handle failed login
+            console.log("Login failed");
+            // errors are handled in the context
+            console.log(error);
+        }
     };
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,8 +81,16 @@ const LoginComponent: React.FC<{}> = () => {
             passwordError,
             errors
         });
-
     };
+
+    // redirect to home if already logged in
+    useEffect(() => {
+        if (user) {
+            console.log("User is logged in:", user);
+            // redirect to home page
+            router.push('/home');
+        }
+    }, [user]);
 
     return (
         <Form>
