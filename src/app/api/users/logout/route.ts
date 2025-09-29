@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // Logout route to clear the authentication token
-export async function GET() {
+export async function DELETE() {
     try {
         const response: any = NextResponse.json(
             {

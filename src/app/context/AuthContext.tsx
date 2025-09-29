@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useReducer } from 'react';
 import type { ReactNode } from 'react';
 //api functions
-import { handleLogin, handleSignup } from '../components/auth_components/frontend_api_components/authFunctions';
+import { handleLogin, handleSignup, handleLogout } from '../components/auth_components/frontend_api_components/authFunctions';
 
 // types
 type User = {
@@ -60,7 +60,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 interface IAuthInterface extends AuthState {
   dispatchSignup: (email: string, password: string) => Promise<boolean>;
   dispatchLogin: (email: string, password: string) => Promise<boolean>;
-  dispatchLogout: () => Promise<void>;
+  dispatchLogout: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<IAuthInterface | null>(null);
@@ -96,7 +96,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement login logic here
       const { success, user, message } = await handleLogin(email, password);
-      // const mockUser: User = { id: '1', email: "user@mail.com" }; // mock user for demonstration
       if (!success || !user) {
         dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message || "From Auth Context: Login failed" } });
         return false;
@@ -111,16 +110,22 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  async function dispatchLogout() {
+  async function dispatchLogout(): Promise<boolean> {
     try {
       dispatch({ type: 'AUTH_REQUEST', payload: { loading: true, error: null } });
       // implement logout logic here
-      // await axios.post('/api/users/logout');
-
+      const success = await handleLogout();
+      if (!success) {
+        dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: "Logout failed" } });
+        return false;
+      }
+      // logout successful
       dispatch({ type: 'LOGOUT', payload: { loading: false, user: null, error: null } });
+      return true;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [Auth Context]";
       dispatch({ type: 'AUTH_ERROR', payload: { loading: false, error: message } });
+      return false;
     }
   }
 

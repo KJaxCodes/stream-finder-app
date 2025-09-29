@@ -39,3 +39,17 @@ export const handleLogin = async (email: string, password: string): Promise<Logi
         return { success: false, user: null, message: "Login error" };
     }
 };
+
+export const handleLogout = async (): Promise<boolean> => {
+    try { 
+        const response = await axios.delete('/api/users/logout');
+        if (response.status != 200) {
+            return false;
+        }
+        return true;
+    } catch (error: unknown) {
+        console.error('Logout error: ', error);
+        // error component
+        return false;
+    }
+};
