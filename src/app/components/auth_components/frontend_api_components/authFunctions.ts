@@ -15,7 +15,7 @@ export const handleSignup = async (email: string, password: string): Promise<boo
     }
 }
 
-type UserData= { id: string; email: string };
+type UserData = { id: string; email: string };
 
 type LoginResponse = {
     success: boolean;
@@ -33,7 +33,7 @@ export const handleLogin = async (email: string, password: string): Promise<Logi
             return { success: false, user: null, message };
         }
 
-        return { success: true, user: null, message };
+        return { success: true, user, message };
     } catch (error: unknown) {
         console.error('Login error:', error);
         return { success: false, user: null, message: "Login error" };
