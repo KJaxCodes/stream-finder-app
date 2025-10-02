@@ -26,6 +26,7 @@ const SearchComponent: React.FC<{}> = () => {
         e.preventDefault();
         console.log("Searching for:", query);
         // Implement search functionality here
+        
 
         // Reset query after search
         setQuery('');
