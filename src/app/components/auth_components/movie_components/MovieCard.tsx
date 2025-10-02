@@ -1,0 +1,69 @@
+import React from 'react';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
+
+type MovieCardProps = {
+    title: string;
+    posterUrl: string;
+    year: string;
+    rating: string;
+    imdbRating: number;
+    genres: string[];
+    director: string[];
+    cast: string[];
+    summary: string;
+    streamingOn: string[];
+};
+
+const MovieCard: React.FC<MovieCardProps> = ({
+    title,
+    posterUrl,
+    year,
+    rating,
+    imdbRating,
+    genres,
+    director,
+    cast,
+    summary,
+    streamingOn
+}) => {
+    return (
+        <Card className="mb-4">
+            <Card.Body>
+                <Card.Title>{title}</Card.Title>
+                <Button variant="outline-danger" className="mb-3">
+                    ❤️ Add to Watchlist
+                </Button>
+
+                <div className="mb-3">
+                    <Image src={posterUrl} alt={`${title} poster`} thumbnail />
+                    <small className="text-muted">Image from Watchmode</small>
+                </div>
+
+                <div>
+                    <p><strong>Year:</strong> {year}</p>
+                    <p><strong>Rated:</strong> {rating}</p>
+                    <p><strong>IMDb Rating:</strong> {imdbRating}</p>
+                    <p><strong>Genres:</strong> {genres?.join(', ')}</p>
+                    <p><strong>Director:</strong> {director?.join(', ')}</p>
+                    <p><strong>Cast:</strong> {cast?.join(', ')}</p>
+                </div>
+
+                <div className="mt-3">
+                    <h5>Summary</h5>
+                    <p>{summary}</p>
+                </div>
+
+                <div className="mt-3">
+                    <h5>Streaming On</h5>
+                    <p>{streamingOn?.join(', ')}</p>
+                </div>
+
+                <small className="text-muted">*All data here comes from Watchmode</small>
+            </Card.Body>
+        </Card>
+    );
+};
+
+export default MovieCard;
