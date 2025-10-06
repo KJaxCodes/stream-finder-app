@@ -16,6 +16,7 @@ type MovieCardProps = {
     cast: string[];
     summary: string;
     streamingOn: string[];
+    runtime?: number;
 };
 
 const MovieCard: React.FC<MovieCardProps> = ({
@@ -28,7 +29,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
     director,
     cast,
     summary,
-    streamingOn
+    streamingOn,
+    runtime
 }) => {
     return (
         <Card className="mb-4">
@@ -45,6 +47,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
                 <div>
                     <p><strong>Year:</strong> {year}</p>
+                    <p><strong>Runtime:</strong> {runtime} minutes</p>
                     <p><strong>Rated:</strong> {rating}</p>
                     <p><strong>IMDb Rating:</strong> {imdbRating}</p>
                     <p><strong>Genres:</strong> {genres?.join(', ')}</p>
@@ -61,8 +64,6 @@ const MovieCard: React.FC<MovieCardProps> = ({
                     <h5>Streaming On</h5>
                     <p>{streamingOn?.join(', ')}</p>
                 </div>
-
-                <small className="text-muted">*All data here comes from Watchmode</small>
             </Card.Body>
         </Card>
     );

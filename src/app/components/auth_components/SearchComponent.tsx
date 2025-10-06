@@ -2,62 +2,65 @@
 
 // Component to search movie titles, display results, and allow users to add movies to their watchlist
 import React, { useState } from 'react';
-import { searchMovie, BasicMovieInfo } from './movie_components/watchmode';
 // Auth context
 import { useAuthContext } from '@/app/context/AuthContext';
 // Bootstrap components
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Image from 'react-bootstrap/Image';
 // 
 import axios from 'axios';
+//
+import MovieCard from './movie_components/MovieCard';
 
-// Function to call the search API route
 
-const searchForMovie = async (query: string) => {
-    try {
-        console.log("Searching for movie:", query);
-        const response = await axios.post('/api/search', { query });
-        console.log("Search response:", response.data);
-        // maybe here set the movie context state
-        return response.data;
-    } catch (error) {
-        console.error("Error searching for movie:", error);
-        return null;
-    }
-}
+// Define the structure of the movie information we want to return
+type MovieCardProps = {
+    id: number;
+    title: string;
+    year: string;
+    posterUrl: string;
+    rating: string;
+    imdbRating: number;
+    genres: string[];
+    director: string[];
+    cast: string[];
+    summary: string;
+    streamingOn: string[];
+    runtime?: number;
+};
 
-// Main Search Component
-
+// Search component for finding movies
 const SearchComponent: React.FC<{}> = () => {
 
     // local state for search query
     const [query, setQuery] = useState('');
-    // const [movie, setMovie] = useState<BasicMovieInfo | null>(null);
+    const [movies, setMovies] = useState<MovieCardProps[]>([]);
 
-    // Function to handle form input changes
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(e.target.value);
-        console.log("Current query:", query);
-    }
+    // search function to call the search api route
+    const searchForMovie = async (query: string) => {
+        try {
+            console.log("Searching for movie:", query);
+            const response = await axios.post('/api/search', { query });
+            setMovies(response.data);
+        } catch (error) {
+            console.error("Error searching for movie:", error);
+            return null;
+        }
+    };
 
-    // Function to handle search button click
+    // function to handle search button click
     const handleSearchButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         console.log("Searching for:", query);
-        // Implement search functionality here
-        const result = await searchForMovie(query);
-        // if (result) {
-        //     setMovie(result);
-        //     console.log("Search result:", result);
-        // } else {
-        //     console.log("No results found");
-        //     setMovie(null);
-        // }
-
-        // Reset query after search
+        await searchForMovie(query);
         setQuery('');
-    }
+    };
+
+    // function to handle form input changes
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery(e.target.value);
+        console.log("Current query:", query);
+    };
 
     return (
         <>
@@ -73,12 +76,7 @@ const SearchComponent: React.FC<{}> = () => {
                 <Button onClick={handleSearchButtonClick} variant="outline-success">Search</Button>
             </Form>
 
-            {/* {movie && (
-                <div className="mt-4">
-                    <h4>{movie.title} ({movie.year})</h4>
-                    <Image src={movie.posterUrl} alt={movie.title} rounded style={{ width: '100px', height: '150px', objectFit: 'cover' }} />
-                </div>
-            )} */}
+            {movies && movies.map(movie => <MovieCard key={movie.id} {...movie} />)}
         </>
     );
 };
