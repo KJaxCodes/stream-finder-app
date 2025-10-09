@@ -3,6 +3,8 @@ import React from "react";
 // React bootstrap imports
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+// auth helpers
+import { redirectIfAuthenticated } from "../api/users/helpers/authHelpers";
 // Additional Components
 import SignupComponent from "../components/auth_components/SignupComponent";
 
@@ -16,6 +18,10 @@ import SignupComponent from "../components/auth_components/SignupComponent";
 //then user can access protected routes with the token
 
 export default function SignupPage() {
+    // If user is already authenticated, redirect to home page
+    redirectIfAuthenticated();
+
+    // Render signup component
     return (
         <>
             <Row className="justify-content-md-center">

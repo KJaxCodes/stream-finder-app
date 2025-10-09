@@ -1,10 +1,9 @@
-//
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 // React imports
 import React from "react";
 // additional components
 import UsersNav from "../components/navbars/UsersNav";
+// auth helpers 
+import { runProtectedRoute } from "../api/users/helpers/authHelpers";
 // styles
 import styles from "../page.module.css";
 
@@ -12,23 +11,7 @@ import styles from "../page.module.css";
 
 
 export default async function Home() {
-
-    // Get cookies from the request
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-
-    // If no token is found, redirect to the login page
-    if (!token) {
-        redirect('/login');
-    }
-
-    // TODO: check if token is valid
-
-    // const isLoggedIn = !!token;
-
-
-    //logout should refresh the page to update the nav links
-    // should logout be a button that calls an action to logout and then refresh the page?
+    await runProtectedRoute();
 
     return (
         <div className={styles.page}>

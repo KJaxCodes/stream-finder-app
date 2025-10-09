@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React from 'react';
 // Client side router
 import { useRouter } from 'next/navigation';
 // Auth context
@@ -42,6 +42,7 @@ const LoginComponent: React.FC<{}> = () => {
         if (success) {
             // Handle successful login
             console.log("Login successful");
+            router.push('/home');
         } else {
             //handle failed login
             console.log("From Login Component: Login failed");
@@ -83,14 +84,6 @@ const LoginComponent: React.FC<{}> = () => {
         });
     };
 
-    // redirect to home if already logged in
-    useEffect(() => {
-        if (user) {
-            console.log("User is logged in: ", user);
-            // go to home page
-            router.push('/home');
-        }
-    }, [user]);
 
     return (
         <Form>

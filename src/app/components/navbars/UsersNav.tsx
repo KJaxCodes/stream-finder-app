@@ -27,7 +27,7 @@ const UsersNav: React.FC<{}> = () => {
 
     useEffect(() => {
         // Perform any side effects or logging here
-        console.log("User state changed:", user);
+        console.log("UsersNav comoponent. User state changed:", user);
     }, [user]);
 
     return (

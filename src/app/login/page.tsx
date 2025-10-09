@@ -3,11 +3,17 @@ import React from "react";
 // React bootstrap imports
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+// auth helpers
+import { redirectIfAuthenticated } from "../api/users/helpers/authHelpers";
 // Additional Components
 import LoginComponent from "../components/auth_components/LoginComponent";
 
 
-export default function LoginPage() {
+export default async function LoginPage() {
+    // If user is already authenticated, redirect to home page
+    await redirectIfAuthenticated();
+
+    // Render login component
     return (
         <>
             <Row className="justify-content-md-center">
