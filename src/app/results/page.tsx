@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 // Additional Components
-import MovieCard from "../components/auth_components/movie_components/MovieCard";
+import MovieCard from "../components/auth_components/movie_components/MovieDetailsCard";
 
 
 export default function ResultsPage() {
