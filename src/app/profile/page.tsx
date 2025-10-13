@@ -1,6 +1,7 @@
 
 
 export default function Profile() {
+    //TODO: protect this route
     return (
         <div>
             <h1>Profile</h1>;

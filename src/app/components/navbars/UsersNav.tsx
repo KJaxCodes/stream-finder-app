@@ -1,34 +1,28 @@
 "use client";
-// AuthContext
-import { useAuthContext } from '@/app/context/AuthContext';
-// Next
-import Link from 'next/link';
-// styles
-import styles from '../../page.module.css';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Button from 'react-bootstrap/Button';
-
+// AuthConext
+import { useAuthContext } from "@/app/context/AuthContext";
+//next
+import Link from "next/link";
+import { redirect } from 'next/navigation';
+// React Bootstrap
+import Button from "react-bootstrap/Button";
+//styles
+import styles from "../../page.module.css";
 
 // UsersNav component
 
 const UsersNav: React.FC<{}> = () => {
     const { user, dispatchLogout } = useAuthContext();
 
-    const router = useRouter();
-
-    const handleLogoutButtonClick = async () => {
-        if (await dispatchLogout()) {
-            return router.push('/login');
+    const handleLogout = async () => {
+        const success = await dispatchLogout();
+        if (!success) {
+            // todo - show error message to user
+            console.error("Logout failed");
         }
-        console.log("Logout failed");
-        // handle logout error component
-    }
-
-    useEffect(() => {
-        // Perform any side effects or logging here
-        console.log("UsersNav comoponent. User state changed:", user);
-    }, [user]);
+        // navigate to home page or login page after logout
+        redirect("/login");
+    };
 
     return (
         <nav className={styles.navLinks}>
@@ -40,11 +34,13 @@ const UsersNav: React.FC<{}> = () => {
                     <Link href="/search">
                         Search
                     </Link>
-                    <Button variant="secondary" onClick={handleLogoutButtonClick}>Logout</Button>
+                    <Button color="danger" onClick={handleLogout}>Log Out</Button>
+
                 </>
             ) : (
                 null
-            )}
+            )
+            }
         </nav>
     );
 }

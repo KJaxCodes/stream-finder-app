@@ -1,55 +1,59 @@
 import axios from "axios";
 //
 import type { IUser } from "@/models/userModel";
+import type { AxiosResponse } from "node_modules/axios/index.cjs";
 
 export const handleSignup = async (email: string, password: string): Promise<boolean> => {
     try {
-        const response = await axios.post('/api/users/signup', { email, password });
-        const { success, message } = response.data;
-        console.log(success, message);
+        const response = await axios.post("/api/users/signup", { email, password });
+        const { succcess, message } = response.data;
+        console.log(succcess, message);
         return true;
     } catch (error: unknown) {
-        console.error('Signup error:', error);
+        console.log(error);
         return false;
-
     }
+};
+
+type UserData = {
+    id: string;
+    email: string;
 }
-
-type UserData = { id: string; email: string };
-
-type LoginResponse = {
-    success: boolean;
-    user: UserData | null;
+type AuthResponse = {
     message: string;
+    user?: UserData | null;
+    success: boolean;
 }
 
-export const handleLogin = async (email: string, password: string): Promise<LoginResponse> => {
+export const handleLogin = async (email: string, password: string): Promise<AuthResponse> => {
     try {
-        const response = await axios.post('/api/users/login', { email, password });
-        const data: { success: boolean, user: UserData | null, message: string } = response.data;
-        const { success, message, user } = data;
-        // login failed, send data to process by React.context
+        const response = await axios.post<{}, AxiosResponse<AuthResponse>>("/api/users/login", { email, password });
+        const { user, success, message } = response.data;
+
+        // login failed, send the data to process by React.Context
         if (!success) {
             return { success: false, user: null, message };
         }
 
-        return { success: true, user, message };
+        return { success: true, user, message }
     } catch (error: unknown) {
-        console.error('Login error:', error);
-        return { success: false, user: null, message: "Login error" };
+        console.log(error);
+        return { success: false, user: null, message: "Unhandled error" };
     }
 };
 
-export const handleLogout = async (): Promise<boolean> => {
-    try { 
-        const response = await axios.delete('/api/users/logout');
-        if (response.status != 200) {
-            return false;
+
+export const handleLogout = async (): Promise<AuthResponse> => {
+    try {
+        const response = await axios.delete<{}, AxiosResponse<AuthResponse>>("api/users/logout");
+        const { success, message } = response.data;
+
+        if (!success) {
+            return { success: false, message };
         }
-        return true;
-    } catch (error: unknown) {
-        console.error('Logout error: ', error);
-        // error component
-        return false;
+
+        return { success: true, user: null, message }
+    } catch (error) {
+        return { success: false, message: "Logout error" };
     }
 };

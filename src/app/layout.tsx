@@ -1,8 +1,6 @@
-// layout wraps the whole application
 import { cookies } from 'next/headers';
 // auth helpers 
 import { authenticateToken } from './api/users/helpers/authHelpers';
-// font imports
 import { Geist, Geist_Mono } from "next/font/google";
 // global css
 // @ts-ignore
@@ -15,6 +13,8 @@ import AuthProvider from "./context/AuthContext";
 // types 
 import type { Metadata } from "next";
 import { UserTokenData } from './types/shared/types';
+import LoadingComponent from './components/ui_helpers/loading_component';
+import MoviesProvider from './context/MoviesContext';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -44,7 +44,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider initialUser={initialUser}>
-          {children}
+          <MoviesProvider>
+            <LoadingComponent />
+            {children}
+          </MoviesProvider>
         </AuthProvider>
       </body>
     </html>

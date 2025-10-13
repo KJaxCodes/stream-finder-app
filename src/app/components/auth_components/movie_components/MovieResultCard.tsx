@@ -4,42 +4,41 @@ import axios from 'axios';
 // Bootstrap components
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+// MoviesContext
+import { useMoviesContext } from '@/app/context/MoviesContext'; 
 
 
 export type MovieResultCardProps = {
     id: number;
     title: string;
-    year: number;
-    type: string;
+    year: number | string;
 };
 
 const MovieResultCard: React.FC<MovieResultCardProps> = ({
     id,
     title,
     year,
-    type,
-
 }) => {
 
+    const { dispatchFetchMovieDetails } = useMoviesContext();
+
     const getMovieDetails = async () => {
-        try {
-            const response = await axios.post('/api/search_movie_details', { movieId: id });
-            console.log("Movie details response: ", response.data);
-        } catch (error) {
-            console.error("Error fetching movie details: ", error);
-        }
+        await dispatchFetchMovieDetails(id);
+        // The modal display is now handled in the SearchComponent when currentMovie is set
     };
 
     return (
         <Card className="mb-4">
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
-                <Button variant="outline-info" className="mb-3" onClick={getMovieDetails}>
-                    ➕ Show Details
+                <Button variant="info" className="mb-3" onClick={getMovieDetails}>
+                    ❤️ Show Details
                 </Button>
                 <div>
                     <p><strong>Year:</strong> {year}</p>
                 </div>
+
+                {/* {/* <small className="text-muted">*All data here comes from Watchmode</small> */}
             </Card.Body>
         </Card>
     );

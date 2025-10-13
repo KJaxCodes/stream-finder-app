@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState,  useReducer } from 'react';
+import React, { createContext, useContext, useState, useReducer } from 'react';
 import type { ReactNode } from 'react';
 // api functions
 import { handleSignup, handleLogin, handleLogout } from '../components/auth_components/frontend_api_components/authFunctions';
@@ -8,19 +8,19 @@ import { handleSignup, handleLogin, handleLogout } from '../components/auth_comp
 import type { UserTokenData } from "@/app/types/shared/types";
 
 type AuthState = {
-  user:     UserTokenData | null;
-  loading:  boolean;
-  error:    string | null;
+  user: UserTokenData | null;
+  loading: boolean;
+  error: string | null;
 }
 
 // actions 
 // type LoginRequest = { type: "LOGIN_REQUEST", payload: { loading: boolean; }};
 // type SignupRequest = { type: "SIGNUP_REQUEST", payload: { loading: boolean }};
-type AuthRequest = { type: "AUTH_REQUEST", payload: { loading: boolean; error: null }};
-type LoginSuccess = { type: "LOGIN_SUCCESS", payload: { user: UserTokenData; loading: boolean, error: null; }};
-type SignupSuccess = { type: "SIGNUP_SUCCESS", payload: { loading: boolean; error: null; }};
-type Logout = { type: "LOGOUT", payload: { loading: boolean; user: null; error: null; }}
-type AuthError = { type: "AUTH_ERROR", payload: { loading: boolean; error: string; }};
+type AuthRequest = { type: "AUTH_REQUEST", payload: { loading: boolean; error: null } };
+type LoginSuccess = { type: "LOGIN_SUCCESS", payload: { user: UserTokenData; loading: boolean, error: null; } };
+type SignupSuccess = { type: "SIGNUP_SUCCESS", payload: { loading: boolean; error: null; } };
+type Logout = { type: "LOGOUT", payload: { loading: boolean; user: null; error: null; } }
+type AuthError = { type: "AUTH_ERROR", payload: { loading: boolean; error: string; } };
 
 type AuthAction = AuthRequest | LoginSuccess | SignupSuccess | Logout | AuthError;
 
@@ -45,7 +45,7 @@ const authreducer = (state: AuthState, action: AuthAction): AuthState => {
     case "AUTH_ERROR": {
       return { ...state, ...action.payload };
     }
-    default: 
+    default:
       return state;
   }
 };
@@ -53,13 +53,13 @@ const authreducer = (state: AuthState, action: AuthAction): AuthState => {
 interface IAuthInterface extends AuthState {
   dispatchSignup: (email: string, password: string) => Promise<boolean>;
   dispatchLogin: (email: string, password: string) => Promise<boolean>;
-  dispatchLogout: () => Promise<void>;
+  dispatchLogout: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<IAuthInterface | null>(null);
 
 const AuthProvider = ({ children, initialUser = null }: { children: ReactNode; initialUser: UserTokenData | null; }) => {
-  const [ state, dispatch ] = useReducer(authreducer, { ...initialState, user: initialUser });
+  const [state, dispatch] = useReducer(authreducer, { ...initialState, user: initialUser });
 
   async function dispatchSignup(email: string, password: string): Promise<boolean> {
     try {
@@ -69,7 +69,7 @@ const AuthProvider = ({ children, initialUser = null }: { children: ReactNode; i
 
       // signup failed, don't have validations yet (probably a duplicate user, fix later)
       if (!success) {
-        dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: "Signup failed" }});
+        dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: "Signup failed" } });
         return false;
       }
       dispatch({ type: "SIGNUP_SUCCESS", payload: { loading: false, error: null } });
@@ -78,7 +78,7 @@ const AuthProvider = ({ children, initialUser = null }: { children: ReactNode; i
     } catch (error: unknown) {
       // any unexpected error
       const message = error instanceof Error ? error.message : "Unknown error, check [AuthContext]";
-      dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message }});
+      dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message } });
       return false;
     }
   }
@@ -91,31 +91,39 @@ const AuthProvider = ({ children, initialUser = null }: { children: ReactNode; i
       const { success, message, user } = await handleLogin(email, password);
       //const mockUser: User = { id: 1, email: "user@mail.com" };
       if (!success || !user) {
-        dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message || "Login failed" }});
+        dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message || "Login failed" } });
         return false;
       }
       // login successful
-      dispatch({ type: "LOGIN_SUCCESS", payload: { loading: false, user: user,  error: null } });
+      dispatch({ type: "LOGIN_SUCCESS", payload: { loading: false, user: user, error: null } });
       return true;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error, check [AuthContext]";
-      dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message }});
+      dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message } });
       return false;
     }
   }
 
-  async function dispatchLogout() {
+  async function dispatchLogout(): Promise<boolean> {
     try {
       dispatch({ type: "AUTH_REQUEST", payload: { loading: true, error: null } });
-      // do logout //
-      dispatch({ type: "LOGOUT", payload: { loading: false, user: null, error: null } })
+      const { success, message } = await handleLogout();
+
+      if (!success) {
+        dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message || "Logout failed" } });
+        return false;
+      }
+      // logout successful
+      dispatch({ type: "LOGOUT", payload: { loading: false, user: null, error: null } });
+      return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error, check [AuthContext]";
-      dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message }});
+      dispatch({ type: "AUTH_ERROR", payload: { loading: false, error: message } });
+      return false;
     }
   }
 
- 
+
   return (
     <AuthContext.Provider value={{ ...state, dispatchLogin, dispatchSignup, dispatchLogout }}>
       {children}

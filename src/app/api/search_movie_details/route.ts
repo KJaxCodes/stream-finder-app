@@ -1,24 +1,10 @@
-//this route will handle a request for movie details by id and call the watchmode api
-
+//this route will handle a search request and call the watchmode api
+// NextResponse 
+import { NextResponse } from "next/server";
 import axios from "axios";
+// types
+import type { MovieDetailsData, MovieDetailsResponse } from "@/app/types/shared/types";
 
-type MovieDetailsData = {
-    // first batch of details
-    id: number;
-    title: string;
-    summary: string;
-    runtime: number;
-    year: string;
-    imdbRating: number;
-    genres: string[];
-    rating: string;
-    posterURL: string;
-    // second batch of details
-    director: string[];
-    cast: string[];
-    // third batch of details
-    streamingOn: string[];
-};
 
 
 export async function POST(request: Request) {
@@ -28,8 +14,8 @@ export async function POST(request: Request) {
         console.log("Movie ID is: ", movieId);
 
         if (!movieId) {
-            return new Response(
-                JSON.stringify({ message: "Movie ID is required" }),
+            return NextResponse.json(
+                { message: "Movie ID is required", movieData: null },
                 { status: 400 }
             );
         }
@@ -37,8 +23,8 @@ export async function POST(request: Request) {
         const apiKey = process.env.WATCHMODE_API_KEY; // Use server-side environment variable
 
         if (!apiKey) {
-            return new Response(
-                JSON.stringify({ message: "API key not configured" }),
+            return NextResponse.json(
+                { message: "API key not configured", movieData: null },
                 { status: 500 }
             );
         }
@@ -55,9 +41,7 @@ export async function POST(request: Request) {
         });
 
         if (!detailsResponse.data) {
-            return new Response(JSON.stringify({ message: "No details found" }), {
-                status: 404,
-            });
+            return NextResponse.json({ message: "No details found", movieData: null }, { status: 404 });
         }
 
         const movieDetails = detailsResponse.data;
@@ -80,8 +64,7 @@ export async function POST(request: Request) {
             params: { apiKey: apiKey },
         });
 
-        // if no cast and crew data found, set to not available
-        if (!castCrewResponse.data) {
+        if (castCrewResponse.data) {
             movieDetails.director = "Not Available";
             movieDetails.cast = "Not Available";
         }
@@ -108,15 +91,13 @@ export async function POST(request: Request) {
             detailsData.streamingOn = ["Not Available"];
         }
 
-        // grab unique source names
-        detailsData.streamingOn = Array.from(new Set(sourcesResponse.data.map((source: any) => source.name)));
+        detailsData.streamingOn = [... new Set<string>(sourcesResponse.data.map((source: any) => source.name))];
 
-        return new Response(JSON.stringify({ message: "Success", movieData: detailsData }), { status: 200 });
-        
+        return NextResponse.json<MovieDetailsResponse>({ message: "Success", movieData: detailsData }, { status: 200 });
     } catch (error) {
         console.error("Error processing search request:", error);
-        return new Response(
-            JSON.stringify({ message: "Error processing request" }),
+        return NextResponse.json<MovieDetailsResponse>(
+            { message: "General server error processing movie details request", movieData: null },
             { status: 500 }
         );
     }
