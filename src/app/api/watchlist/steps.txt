@@ -1,0 +1,74 @@
+-after clicking 'add to watchlist' button, this file handles the
+-api requests to the server related to the user's watchlist
+-general GET route to get the user's watchlist or nothing
+-POST route to add a movie to the user's watchlist
+-if movie is already in the watchlist, prevent user from adding it again
+-DELETE route to remove a movie from the user's watchlist 
+-button to refresh movie data from external api
+-protect routes with auth middleware
+
+step 1 : write the logic steps out in comments
+LOGIC:
+ 1. Get the user's ID from the request (from the auth middleware)
+ 2. Connect to the database
+ 3. Find the user by ID
+ 4. If user not found, return error
+ 5. For GET request, return the user's watchlist
+ 6. For POST request, get movie data from request body
+    a. Check if movie is already in watchlist, if so return error "Cannot add movie twice"
+    b. If not, add movie to watchlist and save user
+    c. Return success message and updated watchlist
+
+userModel:
+1. store movieId and title, instead of movieId and comment in the interface and schema
+
+watchlist route.ts requests:
+1. GET: Return the user's watchlist
+2. POST: Add a movie to the user's watchlist
+3. DELETE: Remove a movie from the user's watchlist
+    For each request:
+        -check for and verify token (only logged in user can do these)
+        -find the user by ID
+        -do the operation
+
+MoviesContext:
+1. update type MoviesState to include watchlist...watchlist: { movieId: string; title: string }[];
+2. update actions:
+    a. type AddToWatchList = { type: "ADD_TO_WATCHLIST", payload: {watchlist: ???; loading: boolean; error: null }}
+    b. type RemoveFromWatchlist = { type: "REMOVE_FROM_WATCHLIST", payload: {watchlist: ???; loading: boolean; error: null }}
+    c. type FetchCurrentWatchlist ???
+add watchlist to initialState?
+3. moviesReducer cases:
+    a. case "ADD_TO_WATCHLIST":
+  return {
+    ...state,
+    watchlist: [...state, action.payload],
+  };
+    b. case "REMOVE_FROM_WATCHLIST":
+     ....
+4. interface extends MoviesState:
+    a. dispatchAddToWatchlist
+    b. dispatchRemoveFromWatchlist
+5. dispatch functions:
+    a. const dispatchAddToWatchlist = async (movieId: string, title: string) => {
+  try {
+    await axios.post('/api/watchlist', { movieId, title });
+    dispatch({ type: "ADD_TO_WATCHLIST", payload: { movieId, title } });
+  } catch (error) {
+    console.error("Failed to add to watchlist", error);
+  }
+};
+    b. const dispatchRemoveFromWatchlist
+    c. update the return 
+
+MovieDetailsModal:
+1. button to add to watchlist that call dispatchAddToWatchlist
+
+Create watchlist page.tsx:
+1. would this be the profile? in place of profile? a modal in thep rofile? I think in place of profile makes sense
+
+
+
+
+
+

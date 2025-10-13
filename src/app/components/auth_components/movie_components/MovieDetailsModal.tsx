@@ -64,8 +64,12 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
 
                 </Modal.Body>
                 <Modal.Footer>
+
                     <Button variant="secondary" onClick={handleModalClose}>
                         Close
+                    </Button>
+                    <Button variant="primary" onClick={() => {/* Add to watchlist logic here */}}>
+                        Add to Watchlist
                     </Button>
 
                 </Modal.Footer>

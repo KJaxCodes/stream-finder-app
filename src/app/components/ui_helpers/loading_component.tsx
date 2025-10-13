@@ -19,7 +19,7 @@ const LoadingComponent: React.FC = () => {
             <div className="loading-spinner">
                 <Spinner animation="border" variant="primary">
                 </Spinner>
-                <span>Auth Working....</span>
+                <span>Processing request....</span>
             </div>
         );
     }

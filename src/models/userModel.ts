@@ -1,11 +1,12 @@
 import { Schema, Document, model, models, Model } from "mongoose";
+import { isReactCompilerRequired } from "next/dist/build/swc/generated-native";
 //validator package to validate email
 import { isEmail } from "validator";
 
 export interface IUser extends Document {
     email: string;
     password: string;
-    watchlist: { movieId: string; comment: string }[];
+    watchlist: { movieId: string; title: string }[];
     favorites: { movieId: string; comment: string }[];
 }
 
@@ -33,15 +34,15 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
     watchlist: [
         {
             movieId: { type: String, required: true },
-            comment: { type: String, default: "" },
+            title: { type: String, required: true },
         },
     ],
-    favorites: [
-        {
-            movieId: { type: String, required: true },
-            comment: { type: String, default: "" },
-        },
-    ],
+    // favorites: [
+    //     {
+    //         movieId: { type: String, required: true },
+    //         comment: { type: String, default: "" },
+    //     },
+    // ],
 
 });
 

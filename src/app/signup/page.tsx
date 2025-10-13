@@ -41,11 +41,5 @@ export default function SignupPage() {
                 </Col>
             </Row>
         </>
-        //     <div>
-        //         <h1>{loading ? "Processing..." : "Signup Page"}</h1>
-        //         <SignupComponent />
-
-        //         <Link href="/login">Already have an account? Visit Login Page</Link>
-        //     </div>
     );
 }

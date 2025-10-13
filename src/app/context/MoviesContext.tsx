@@ -19,15 +19,17 @@ type MoviesState = {
   currentMovie: MovieDetailsData | null; // Detailed info of the selected movie
   loading: boolean; // Loading state for async operations
   error: string | null; // Error message if any operation fails
+  // current watchlist array of movie IDs and title
+  watchlist: { movieId: string; title: string }[];
 };
 
 // actions
-type SearchRequest = { type: "SEARCH_REQUEST", payload: { loading: boolean; error: null }};
-type SearchSuccess = { type: "SEARCH_SUCCESS", payload: { searchResults: MovieResult[]; loading: boolean; error: null }};
-type FetchMovieDetailsRequest = { type: "FETCH_MOVIE_DETAILS_REQUEST", payload: { loading: boolean; error: null }};
-type FetchMovieDetailsSuccess = { type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: MovieDetailsData; loading: boolean; error: null }};
-type ClearCurrentMovie = { type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null }};
-type MoviesError = { type: "MOVIES_ERROR", payload: { loading: boolean; error: string }};
+type SearchRequest = { type: "SEARCH_REQUEST", payload: { loading: boolean; error: null } };
+type SearchSuccess = { type: "SEARCH_SUCCESS", payload: { searchResults: MovieResult[]; loading: boolean; error: null } };
+type FetchMovieDetailsRequest = { type: "FETCH_MOVIE_DETAILS_REQUEST", payload: { loading: boolean; error: null } };
+type FetchMovieDetailsSuccess = { type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: MovieDetailsData; loading: boolean; error: null } };
+type ClearCurrentMovie = { type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } };
+type MoviesError = { type: "MOVIES_ERROR", payload: { loading: boolean; error: string } };
 
 type MoviesAction = ClearCurrentMovie | SearchRequest | SearchSuccess | FetchMovieDetailsRequest | FetchMovieDetailsSuccess | ClearCurrentMovie | MoviesError;
 
@@ -36,6 +38,7 @@ const initialState: MoviesState = {
   currentMovie: null,
   loading: false,
   error: null,
+  watchlist: [],
 };
 
 const moviesReducer = (state: MoviesState, action: MoviesAction): MoviesState => {
@@ -58,7 +61,7 @@ const moviesReducer = (state: MoviesState, action: MoviesAction): MoviesState =>
     case "MOVIES_ERROR": {
       return { ...state, ...action.payload };
     }
-    default: 
+    default:
       return state;
   }
 };
@@ -76,19 +79,19 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
 
   // Function to search for movies by title
   const dispatchSearch = async (query: string): Promise<void> => {
-    dispatch({ type: "SEARCH_REQUEST", payload: { loading: true, error: null }});
+    dispatch({ type: "SEARCH_REQUEST", payload: { loading: true, error: null } });
     try {
       const response = await axios.post('/api/search', { query });
       const movies: MovieResult[] = response.data;
-      dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null }});
+      dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null } });
     } catch (error: any) {
-      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message }});
+      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
     }
   };
 
   // function to fetch detailed info for a specific movie by ID
   const dispatchFetchMovieDetails = async (movieId: number): Promise<void> => {
-    dispatch({ type: "FETCH_MOVIE_DETAILS_REQUEST", payload: { loading: true, error: null }});
+    dispatch({ type: "FETCH_MOVIE_DETAILS_REQUEST", payload: { loading: true, error: null } });
     try {
       const response = await axios.post('/api/search_movie_details', { movieId });
       const { message, movieData } = response.data as MovieDetailsResponse;
@@ -97,20 +100,20 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
       if (!movieData) {
         throw new Error(message || "No movie data found");
       }
-      
-      dispatch({ type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: movieData, loading: false, error: null }});
+
+      dispatch({ type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: movieData, loading: false, error: null } });
 
     } catch (error: any) {
-      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message }});
+      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
     }
   };
 
   // function to clear the current movie details
   const dispatchClearCurrentMovie = (): void => {
-    dispatch({ type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null }});
+    dispatch({ type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } });
   };
 
-  return (  
+  return (
     <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearCurrentMovie }}>
       {children}
     </MoviesContext.Provider>
