@@ -7,7 +7,7 @@ import { useMoviesContext } from '../../context/MoviesContext';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-// additinal components
+// additional components
 import MovieDetailsModal from '@/app/components/auth_components/movie_components/MovieDetailsModal';
 import MovieResultCard from '@/app/components/auth_components/movie_components/MovieResultCard';
 // types
