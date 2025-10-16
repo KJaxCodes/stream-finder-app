@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 // MoviesContext  
-import { useMoviesContext } from '@/app/context/MoviesContext'; 
+import { useMoviesContext } from '@/app/context/MoviesContext';
 import { MovieDetailsData } from '@/app/types/shared/types';
 
 interface IMovieDetailsModalProps {
@@ -29,6 +29,12 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
         dispatchClearCurrentMovie();
     };
 
+    const handleAddToWatchlist = () => {
+        console.log("Add to Watchlist clicked for movie:", currentMovie);
+        // dispatchAddToWatchlist(currentMovie);
+
+
+    };
     console.log("Rendering MovieDetailsModal for movie:", currentMovie);
 
     return (
@@ -65,12 +71,13 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
                 </Modal.Body>
                 <Modal.Footer>
 
+                    <Button variant="primary" onClick={handleAddToWatchlist}>
+                        Add to Watchlist
+                    </Button>
                     <Button variant="secondary" onClick={handleModalClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => {/* Add to watchlist logic here */}}>
-                        Add to Watchlist
-                    </Button>
+
 
                 </Modal.Footer>
             </Modal>

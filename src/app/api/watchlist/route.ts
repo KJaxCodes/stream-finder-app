@@ -1,27 +1,118 @@
-// after clicking 'add to watchlist' button, this file handles the
-// api requests to the server related to the user's watchlist
-// general GET route to get the user's watchlist or nothing
-// POST route to add a movie to the user's watchlist
-// if movie is already in the watchlist, prevent user from adding it again
-// DELETE route to remove a movie from the user's watchlist 
-// button to refresh movie data from external api
-// protect routes with auth middleware
+// GET Route to fetch the authenticated user's watchlist
+// POST Route to add a movie to the authenticated user's watchlist
+// DELETE Route to remove a movie from the authenticated user's watchlist
 
-// step 1 : write the logic steps out in comments
-// LOGIC:
-// 1. Get the user's ID from the request (from the auth middleware)
-// 2. Connect to the database
-// 3. Find the user by ID
-// 4. If user not found, return error
-// 5. For GET request, return the user's watchlist
-// 6. For POST request, get movie data from request body
-//    a. Check if movie is already in watchlist, if so return error "Cannot add movie twice"
-//    b. If not, add movie to watchlist and save user
-//    c. Return success message and updated watchlist
+import { NextResponse, NextRequest } from "next/server";
+// models and database
+import User from "@/models/userModel";
+import Movie from "@/models/movieModel";
 
-
+import { connect } from "@/dbConfig/dbConfig";
+// TODO: protect the route with auth middleware
+import type { IUser } from "@/models/userModel";
+import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/app/types/shared/types";
 
 // GET /api/watchlist
+// TODO: Data Types for reqBody?
+// Fetch the authenticated user's watchlist
+export async function GET(request: NextRequest) {
+    try {
+        await connect();
+        const reqURL = new URL(request.url);
 
+        console.log("Full request URL: ", reqURL);
+        const userId = reqURL.searchParams.get("userId");
+
+        if (!userId) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot retrieve watchlist", watchlist: null, errors: ["Missing user data (id) to retrieve watchlist"]
+            }, { status: 400 }
+            );
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot retrieve watchlist", watchlist: null, errors: ["User not found"]
+            }, { status: 404 }
+            );
+        }
+
+        const watchlist = await Movie.find({ user: userId }) as WatchlistMovieData[];
+
+        console.log("User's watchlist: ", watchlist);
+        return NextResponse.json<WatchlistResponse>({
+            message: "Watchlist fetched successfully", watchlist, errors: null
+        }, { status: 200 }
+        );
+    } catch (error: any) {
+        console.error("Error in GET /api/watchlist:", error);
+        return NextResponse.json<WatchlistResponse>({
+            message: "Server error", watchlist: null, errors: [error.message || "Unknown GET /watchlist error"]
+        }, { status: 500 }
+        );
+    }
+}
+
+// POST /api/watchlist
+// Add a movie to the authenticated user's watchlist
+export async function POST(request: NextRequest) {
+    try {
+        await connect();
+        const reqBody = await request.json();
+
+        // basic validation
+        if (!reqBody || !reqBody.userId || !reqBody.movieData) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot add to watchlist", watchlist: null, errors: ["Missing data to add to watchlist"]
+            }, { status: 400 }
+            );
+        }
+
+        const { userId, movieData } = reqBody as { userId: string; movieData: MovieDetailsData };
+
+        const user = await User.findById(userId) as IUser | null;
+        if (!user) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot add to watchlist", watchlist: null, errors: ["User not found"]
+            }, { status: 404 }
+            );
+        }
+        // check if movie already in watchlist
+        const existingMovie = await Movie.findOne({ user: userId, watchmodeId: movieData.id });
+        console.log("Existing movie in watchlist: ", existingMovie);
+        if (existingMovie) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Movie already in watchlist", watchlist: null, errors: ["Duplicate movie"]
+            }, { status: 400 }
+            );
+        }
+
+        // create new movie document
+        const newMovie = new Movie({ ...movieData, watchmodeId: movieData.id, user: userId });
+        await newMovie.save();
+
+        // add movie to user's watchlist
+        user.watchlist.push(newMovie._id);
+        await user.save();
+
+        // fetch updated watchlist
+        const updatedWatchlist = await Movie.find({ user: userId }) as WatchlistMovieData[];
+
+
+        return NextResponse.json<WatchlistResponse>({
+            message: "Movie added to watchlist", watchlist: updatedWatchlist, errors: null
+        }, { status: 201 }
+        );
+
+    } catch (error: any) {
+        console.error("Error in POST /api/watchlist:", error);
+        return NextResponse.json<WatchlistResponse>({
+            message: "Server error", watchlist: null, errors: [error.message || "Unknown POST /watchlist error"]
+        }, { status: 500 }
+        );
+    }
+};
 
 

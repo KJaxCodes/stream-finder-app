@@ -1,0 +1,27 @@
+{
+  "id": 1195859,
+  "title": "Jurassic Park",
+  "summary": "A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA. Before opening day, he invites a team of experts and his two eager grandchildren to experience the park and help calm anxious investors. However, the park is anything but amusing as the security systems go off-line and the dinosaurs escape.",
+  "runtime": 127,
+  "year": 1993,
+  "rating": "PG-13",
+  "imdbRating": 8.3,
+  "genres": [
+    "Adventure",
+    "Science Fiction"
+  ],
+  "posterURL": "https://cdn.watchmode.com/posters/01195859_poster_w342.jpg",
+  "director": [
+    "Steven Spielberg"
+  ],
+  "cast": [
+    "Laura Dern",
+    "Sam Neill",
+    "Jeff Goldblum"
+  ],
+  "streamingOn": [
+    "Netflix",
+    "fuboTV",
+    "AppleTV"
+  ]
+}

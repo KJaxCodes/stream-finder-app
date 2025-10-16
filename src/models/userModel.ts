@@ -31,18 +31,15 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
         required: [true, 'Password is required'],
         minlength: [8, 'Password must be at least 8 characters long']
     },
-    watchlist: [
+    // User's watchlist of movies (MovieModel references)
+    watchlist: [{ type: Schema.Types.ObjectId, ref: 'Movie', required: true }], //example: [ "648a1f2e5f4c3b0012345678", "648a1f2e5f4c3b0012345679" ]
+    // User's favorite movies with optional comments?
+    favorites: [
         {
             movieId: { type: String, required: true },
-            title: { type: String, required: true },
+            comment: { type: String, default: "" },
         },
-    ],
-    // favorites: [
-    //     {
-    //         movieId: { type: String, required: true },
-    //         comment: { type: String, default: "" },
-    //     },
-    // ],
+    ]
 
 });
 
