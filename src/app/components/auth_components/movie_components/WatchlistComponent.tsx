@@ -6,6 +6,8 @@ import React, { useEffect } from "react";
 import { useAuthContext } from "@/app/context/AuthContext";
 import { useMoviesContext } from "@/app/context/MoviesContext";
 import Card from "react-bootstrap/Card";
+//
+import Button from "react-bootstrap/Button";
 
 const WatchlistComponent: React.FC = () => {
     const { dispatchFetchWatchlist, watchlist } = useMoviesContext();
@@ -31,12 +33,13 @@ const WatchlistComponent: React.FC = () => {
 
     return (
         <div className="mt-4">
-            <h3>Your Watchlist</h3>
+            <h3>{`${user?.email?.split('@')[0].charAt(0).toUpperCase() + user?.email?.split('@')[0].slice(1)}'s Watchlist`}</h3>
             {[{ objectId: "11111", title: "Sample Movie" }].map(({ objectId, title }) => (
                 <Card key={objectId} className="mb-3">
                     <Card.Body>
                         <Card.Title>{title}</Card.Title>
                         <Card.Text>Movie ID: {objectId}</Card.Text>
+                        <Button variant="danger">Delete</Button>
                     </Card.Body>
                 </Card>
             ))}
