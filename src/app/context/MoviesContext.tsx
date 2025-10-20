@@ -1,12 +1,10 @@
-// movies, setMovies, loading, error
-
 'use client';
 import React, { createContext, useContext, useReducer } from 'react';
 import axios from 'axios';
 // type imports 
 
 import type { ReactNode } from 'react';
-import type { MovieDetailsData, MovieDetailsResponse } from "@/app/types/shared/types";
+import type { MovieDetailsData, MovieDetailsResponse, WatchlistMovieData, WatchlistResponse } from "@/app/types/shared/types";
 
 type MovieResult = {
   id: number;
@@ -14,48 +12,72 @@ type MovieResult = {
   year: string;
 };
 
+
 type MoviesState = {
   searchResults: MovieResult[]; // Array of movie results from search
   currentMovie: MovieDetailsData | null; // Detailed info of the selected movie
   loading: boolean; // Loading state for async operations
   error: string | null; // Error message if any operation fails
   // current watchlist array of movie IDs and title
-  watchlist: { movieId: string; title: string }[];
+  watchlist: WatchlistMovieData[];
 };
 
 // actions
-type SearchRequest = { type: "SEARCH_REQUEST", payload: { loading: boolean; error: null } };
+// Watchmode API related actions
+type WatchmodeAPIRequest = { type: "WATCHMODE_API_REQUEST", payload: { loading: boolean; error: null } };
 type SearchSuccess = { type: "SEARCH_SUCCESS", payload: { searchResults: MovieResult[]; loading: boolean; error: null } };
-type FetchMovieDetailsRequest = { type: "FETCH_MOVIE_DETAILS_REQUEST", payload: { loading: boolean; error: null } };
 type FetchMovieDetailsSuccess = { type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: MovieDetailsData; loading: boolean; error: null } };
+
+// watchlist actions, handled by NEXT.js API routes
+type WatchListRequest = { type: "WATCHLIST_REQUEST", payload: { loading: boolean; error: null } };
+type FetchWatchlistSuccess = { type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist: WatchlistMovieData[]; loading: boolean; error: null } };
+type AddToWatchlistSuccess = { type: "ADD_TO_WATCHLIST_SUCCESS", payload: { watchlist: WatchlistMovieData[]; loading: boolean; error: null } };
+type RemoveFromWatchlistSuccess = { type: "REMOVE_FROM_WATCHLIST_SUCCESS", payload: { watchlist: WatchlistMovieData[]; loading: boolean; error: null } };
+// NON API actions
 type ClearCurrentMovie = { type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } };
+// Generic error action
 type MoviesError = { type: "MOVIES_ERROR", payload: { loading: boolean; error: string } };
 
-type MoviesAction = ClearCurrentMovie | SearchRequest | SearchSuccess | FetchMovieDetailsRequest | FetchMovieDetailsSuccess | ClearCurrentMovie | MoviesError;
+type MoviesAction = (
+  | WatchmodeAPIRequest | SearchSuccess | FetchMovieDetailsSuccess
+  | WatchListRequest | FetchWatchlistSuccess | AddToWatchlistSuccess | RemoveFromWatchlistSuccess
+  | ClearCurrentMovie
+  | MoviesError
+)
 
 const initialState: MoviesState = {
   searchResults: [],
   currentMovie: null,
   loading: false,
   error: null,
-  watchlist: [],
+  watchlist: []
 };
 
 const moviesReducer = (state: MoviesState, action: MoviesAction): MoviesState => {
   switch (action.type) {
-    case "CLEAR_CURRENT_MOVIE": {
-      return { ...state, ...action.payload };
-    }
-    case "SEARCH_REQUEST": {
+    case "WATCHMODE_API_REQUEST": {
       return { ...state, ...action.payload };
     }
     case "SEARCH_SUCCESS": {
       return { ...state, ...action.payload };
     }
-    case "FETCH_MOVIE_DETAILS_REQUEST": {
+    case "FETCH_MOVIE_DETAILS_SUCCESS": {
       return { ...state, ...action.payload };
     }
-    case "FETCH_MOVIE_DETAILS_SUCCESS": {
+    // watchlist actions
+    case "WATCHLIST_REQUEST": {
+      return { ...state, ...action.payload };
+    }
+    case "FETCH_WATCHLIST_SUCCESS": {
+      return { ...state, ...action.payload };
+    }
+    case "ADD_TO_WATCHLIST_SUCCESS": {
+      return { ...state, ...action.payload };
+    }
+    case "REMOVE_FROM_WATCHLIST_SUCCESS": {
+      return { ...state, ...action.payload };
+    }
+    case "CLEAR_CURRENT_MOVIE": {
       return { ...state, ...action.payload };
     }
     case "MOVIES_ERROR": {
@@ -69,6 +91,7 @@ const moviesReducer = (state: MoviesState, action: MoviesAction): MoviesState =>
 interface IMoviesInterface extends MoviesState {
   dispatchSearch: (query: string) => Promise<void>;
   dispatchFetchMovieDetails: (movieId: number) => Promise<void>;
+  dispatchFetchWatchlist: (userId: string) => Promise<void>;
   dispatchClearCurrentMovie: () => void;
 }
 
@@ -79,7 +102,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
 
   // Function to search for movies by title
   const dispatchSearch = async (query: string): Promise<void> => {
-    dispatch({ type: "SEARCH_REQUEST", payload: { loading: true, error: null } });
+    dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
     try {
       const response = await axios.post('/api/search', { query });
       const movies: MovieResult[] = response.data;
@@ -91,7 +114,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
 
   // function to fetch detailed info for a specific movie by ID
   const dispatchFetchMovieDetails = async (movieId: number): Promise<void> => {
-    dispatch({ type: "FETCH_MOVIE_DETAILS_REQUEST", payload: { loading: true, error: null } });
+    dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
     try {
       const response = await axios.post('/api/search_movie_details', { movieId });
       const { message, movieData } = response.data as MovieDetailsResponse;
@@ -108,13 +131,25 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     }
   };
 
+  // function to fetch the user's watchlist
+  const dispatchFetchWatchlist = async (userId: string): Promise<void> => {
+    dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
+    try {
+      const response = await axios.get(`/api/watchlist?userId=${userId}`);
+      const { watchlist } = response.data as WatchlistResponse;
+      dispatch({ type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
+    } catch (error: any) {
+      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+    }
+  };
+
   // function to clear the current movie details
   const dispatchClearCurrentMovie = (): void => {
     dispatch({ type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } });
   };
 
   return (
-    <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearCurrentMovie }}>
+    <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearCurrentMovie, dispatchFetchWatchlist }}>
       {children}
     </MoviesContext.Provider>
   );

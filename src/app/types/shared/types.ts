@@ -1,5 +1,5 @@
 export type UserTokenData = {
-    id: string;
+    _id: string;
     email: string;
 };
 
@@ -30,9 +30,14 @@ export type MovieDetailsResponse = {
 
 
 // watchlist movie data
-export type WatchlistMovieData = MovieDetailsData & {
+export type WatchlistMovieData = {
     // MongoDB ObjectId as string
-    _id: string;
+    objectId: string;
+    title: string;
+    year: number;
+    summary: string;
+    posterURL: string;
+    streamingOn: string[];
     // watchmode movie ID
     watchmodeId: number;
     // any additional fields specific to watchlist can be added here

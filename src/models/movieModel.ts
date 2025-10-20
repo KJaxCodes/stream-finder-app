@@ -1,4 +1,21 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
+
+export interface IMovie extends Document {
+    _id: mongoose.Types.ObjectId;
+    user: mongoose.Types.ObjectId;
+    watchmodeId: number;
+    title: string;
+    summary: string;
+    runtime: number;
+    year: number;
+    rating: string;
+    imdbRating: number;
+    genres: string[];
+    posterURL: string;
+    director: string[];
+    cast: string[];
+    streamingOn: string[];
+}
 
 // Define the Movie schema
 // Review watchmode API for additional fields to include or updates to existing fields
@@ -50,6 +67,6 @@ const movieSchema = new mongoose.Schema({
     }
 });
 
-const Movie = mongoose.models.movies || mongoose.model('movies', movieSchema);
+const Movie = mongoose.models.movies || mongoose.model<IMovie>('movies', movieSchema);
 
 export default Movie;

@@ -1,57 +1,27 @@
 
+// React imports
+import React from "react";
+// additional components
+import InitialNav from "./components/navbars/InitialNav";
+// styles
 import styles from "./page.module.css";
-import Link from "next/link";
-import { cookies } from 'next/headers';
 
 
+// Landing page for unauthenticated users
 
-export default async function Home() {
-
-  // Get cookies from the request
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  const isLoggedIn = !!token;
-
-
-  //logout should refresh the page to update the nav links
-  // should logout be a button that calls an action to logout and then refresh the page?
-
+export default function LandingPage() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>Streamfinder / page</h1>
-        {/* <nav className={styles.navLinks}>
-          {!isLoggedIn ? (
-            <>
-              <Link href="/signup">
-                Sign Up
-              </Link>
-              <Link href="/login">
-                Log In
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/profile">
-                Profile
-              </Link>
-              <Link href="/search">
-                Search
-              </Link>
-            </>
-
-          )}
-
-        </nav> */}
-        {/* <ul>
+        <InitialNav />
+        <h1>Welcome to Streamfinder</h1>
+        <p>Your ultimate destination to find where to stream your favorite movies.</p>
+        <ul>
           <li>Sign up and log in to your account.</li>
-          <li>View and edit your profile information.</li>
           <li>Search for movies and where to stream them.</li>
-          <li>Save your favorite movies to your watchlist.</li>
-        </ul> */}
-
-
+          <li>Save your favorite movies to your Watchlist.</li>
+          <li>View and edit your Watchlist from your Profile</li>
+        </ul>
       </main>
       <footer className={styles.footer}>
         <a
@@ -63,3 +33,4 @@ export default async function Home() {
     </div>
   );
 }
+

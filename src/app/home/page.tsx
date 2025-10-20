@@ -19,10 +19,9 @@ export default async function Home() {
                 <UsersNav />
                 <h1>Streamfinder Homepage for Logged In Users Only</h1>
                 <ul>
-                    <li>Sign up and log in to your account.</li>
-                    <li>View and edit your profile information.</li>
                     <li>Search for movies and where to stream them.</li>
-                    <li>Save your favorite movies to your watchlist.</li>
+                    <li>Save your favorite movies to your Watchlist.</li>
+                    <li>View and edit your Watchlist from your Profile</li>
                 </ul>
             </main>
             <footer className={styles.footer}>

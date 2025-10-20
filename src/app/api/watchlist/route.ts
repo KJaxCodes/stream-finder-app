@@ -8,13 +8,13 @@ import User from "@/models/userModel";
 import Movie from "@/models/movieModel";
 
 import { connect } from "@/dbConfig/dbConfig";
-// TODO: protect the route with auth middleware
+// TODO: protect the route 
 import type { IUser } from "@/models/userModel";
+import type { IMovie } from "@/models/movieModel";
 import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/app/types/shared/types";
 
 // GET /api/watchlist
 // TODO: Data Types for reqBody?
-// Fetch the authenticated user's watchlist
 export async function GET(request: NextRequest) {
     try {
         await connect();
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
         if (!userId) {
             return NextResponse.json<WatchlistResponse>({
-                message: "Cannot retrieve watchlist", watchlist: null, errors: ["Missing user data (id) to retrieve watchlist"]
+                message: "Cannot retrieve watchlist", watchlist: [], errors: ["Missing user data (id) to retrieve watchlist"]
             }, { status: 400 }
             );
         }
@@ -34,22 +34,32 @@ export async function GET(request: NextRequest) {
 
         if (!user) {
             return NextResponse.json<WatchlistResponse>({
-                message: "Cannot retrieve watchlist", watchlist: null, errors: ["User not found"]
+                message: "Cannot retrieve watchlist", watchlist: [], errors: ["User not found"]
             }, { status: 404 }
             );
         }
 
-        const watchlist = await Movie.find({ user: userId }) as WatchlistMovieData[];
+        const watchlist = await Movie.find({ user: userId }) as IMovie[];
+
+        const watchlistData: WatchlistMovieData[] = watchlist.map((movie) => ({
+            objectId: movie._id.toString(),
+            title: movie.title,
+            year: movie.year,
+            summary: movie.summary,
+            posterURL: movie.posterURL,
+            streamingOn: movie.streamingOn,
+            watchmodeId: movie.watchmodeId,
+        }));
 
         console.log("User's watchlist: ", watchlist);
         return NextResponse.json<WatchlistResponse>({
-            message: "Watchlist fetched successfully", watchlist, errors: null
+            message: "Watchlist fetched successfully", watchlist: watchlistData, errors: null
         }, { status: 200 }
         );
     } catch (error: any) {
         console.error("Error in GET /api/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
-            message: "Server error", watchlist: null, errors: [error.message || "Unknown GET /watchlist error"]
+            message: "Server error", watchlist: [], errors: [error.message || "Unknown GET /watchlist error"]
         }, { status: 500 }
         );
     }
@@ -65,7 +75,7 @@ export async function POST(request: NextRequest) {
         // basic validation
         if (!reqBody || !reqBody.userId || !reqBody.movieData) {
             return NextResponse.json<WatchlistResponse>({
-                message: "Cannot add to watchlist", watchlist: null, errors: ["Missing data to add to watchlist"]
+                message: "Cannot add to watchlist", watchlist: [], errors: ["Missing data to add to watchlist"]
             }, { status: 400 }
             );
         }
@@ -75,16 +85,16 @@ export async function POST(request: NextRequest) {
         const user = await User.findById(userId) as IUser | null;
         if (!user) {
             return NextResponse.json<WatchlistResponse>({
-                message: "Cannot add to watchlist", watchlist: null, errors: ["User not found"]
+                message: "Cannot add to watchlist", watchlist: [], errors: ["User not found"]
             }, { status: 404 }
             );
         }
         // check if movie already in watchlist
-        const existingMovie = await Movie.findOne({ user: userId, watchmodeId: movieData.id });
+        const existingMovie = await Movie.findOne({ user: userId, watchmodeId: movieData.id }) as IMovie | null;
         console.log("Existing movie in watchlist: ", existingMovie);
         if (existingMovie) {
             return NextResponse.json<WatchlistResponse>({
-                message: "Movie already in watchlist", watchlist: null, errors: ["Duplicate movie"]
+                message: "Movie already in watchlist", watchlist: [], errors: ["Duplicate movie"]
             }, { status: 400 }
             );
         }
@@ -109,10 +119,8 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
         console.error("Error in POST /api/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
-            message: "Server error", watchlist: null, errors: [error.message || "Unknown POST /watchlist error"]
+            message: "Server error", watchlist: [], errors: [error.message || "Unknown POST /watchlist error"]
         }, { status: 500 }
         );
     }
 };
-
-
