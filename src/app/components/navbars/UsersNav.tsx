@@ -3,7 +3,7 @@
 import { useAuthContext } from "@/app/context/AuthContext";
 //next
 import Link from "next/link";
-import { redirect } from 'next/navigation';
+import {useRouter} from "next/navigation";
 // React Bootstrap
 import Button from "react-bootstrap/Button";
 //styles
@@ -13,6 +13,7 @@ import styles from "../../page.module.css";
 
 const UsersNav: React.FC<{}> = () => {
     const { user, dispatchLogout } = useAuthContext();
+    const router = useRouter();
 
     const handleLogout = async () => {
         const success = await dispatchLogout();
@@ -20,8 +21,8 @@ const UsersNav: React.FC<{}> = () => {
             // todo - show error message to user
             console.error("Logout failed");
         }
-        // navigate to home page or login page after logout
-        redirect("/login");
+        // navigate to unauthorized landing page
+        router.push("/");
     };
 
     return (

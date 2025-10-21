@@ -127,7 +127,6 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/watchlist
 // Remove a movie from the authenticated user's watchlist
-// console.log statements for debugging
 
 export async function DELETE(request: NextRequest) {
     try {
@@ -137,7 +136,7 @@ export async function DELETE(request: NextRequest) {
         const { userId, movieId } = reqBody as { userId: string; movieId: string };
         console.log("DELETE request body: ", reqBody);
 
-        // basic validation
+        // basic validation check to ensure userId and movieId are provided
         if (!userId || !movieId) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Cannot delete from watchlist",
@@ -146,6 +145,7 @@ export async function DELETE(request: NextRequest) {
             }, { status: 404 });
         }
 
+        // find user by ID, user will include watchlist reference to get movie ID to delete
         const user = await User.findById(userId) as IUser | null;
         if (!user) {
             return NextResponse.json<WatchlistResponse>({

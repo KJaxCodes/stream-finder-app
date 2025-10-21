@@ -163,7 +163,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
       try {
         const response = await axios.post('/api/watchlist', { userId, movieData });
         const { watchlist } = response.data as WatchlistResponse;
-        // update watchlist in state
+        // update watchlist in state 
         dispatch({ type: "ADD_TO_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
         // clear current movie after adding to watchlist?
 
