@@ -124,3 +124,70 @@ export async function POST(request: NextRequest) {
         );
     }
 };
+
+// DELETE /api/watchlist
+// Remove a movie from the authenticated user's watchlist
+// console.log statements for debugging
+
+export async function DELETE(request: NextRequest) {
+    try {
+        await connect();
+        const reqBody = await request.json();
+
+        const { userId, movieId } = reqBody as { userId: string; movieId: string };
+        console.log("DELETE request body: ", reqBody);
+
+        // basic validation
+        if (!userId || !movieId) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot delete from watchlist",
+                watchlist: [],
+                errors: ["Missing data to delete from watchlist"]
+            }, { status: 404 });
+        }
+
+        const user = await User.findById(userId) as IUser | null;
+        if (!user) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot delete from watchlist",
+                watchlist: [],
+                errors: ["User not found"]
+            }, { status: 404 });
+        }
+
+        // remove movie from user's watchlist
+        await Movie.deleteOne({ _id: movieId, user: userId });
+
+        // Fetch updated watchlist
+        const updatedWatchlist = await Movie.find({ user: userId }) as IMovie[];
+
+        // Map to WatchlistMovieData format
+        const watchlistData: WatchlistMovieData[] = updatedWatchlist.map((movie) => ({
+            objectId: movie._id.toString(),
+            title: movie.title,
+            year: movie.year,
+            summary: movie.summary,
+            posterURL: movie.posterURL,
+            streamingOn: movie.streamingOn,
+            watchmodeId: movie.watchmodeId,
+        }));
+
+        // return updated watchlist
+        return NextResponse.json<WatchlistResponse>({
+            message: "Movie deleted from watchlist",
+            watchlist: watchlistData,
+            errors: null
+        }, { status: 200 }
+        );
+    }
+    // CATCH block to handle errors
+    catch (error: any) {
+        console.error("Error in DELETE /api/watchlist:", error);
+        return NextResponse.json<WatchlistResponse>({
+            message: "Server error",
+            watchlist: [],
+            errors: [error.message || "Unknown DELETE /watchlist error"]
+        }, { status: 500 }
+        );
+    }
+};
