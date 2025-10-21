@@ -15,7 +15,7 @@ interface IMovieDetailsModalProps {
 
 const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
     // grab movie details from context or props as needed
-    const { currentMovie, dispatchClearCurrentMovie } = useMoviesContext();
+    const { currentMovie, dispatchClearCurrentMovie, dispatchAddToWatchlist } = useMoviesContext();
 
     if (!currentMovie) {
         return null; // don't render the modal if no movie is selected
@@ -31,9 +31,7 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
 
     const handleAddToWatchlist = () => {
         console.log("Add to Watchlist clicked for movie:", currentMovie);
-        // dispatchAddToWatchlist(currentMovie);
-
-
+        // dispatchAddToWatchlist();
     };
     console.log("Rendering MovieDetailsModal for movie:", currentMovie);
 

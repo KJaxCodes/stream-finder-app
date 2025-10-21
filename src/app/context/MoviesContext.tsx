@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useCallback, useContext, useReducer } from 'react';
 import axios from 'axios';
 // type imports 
 
@@ -50,7 +50,7 @@ const initialState: MoviesState = {
   currentMovie: null,
   loading: false,
   error: null,
-  watchlist: []
+  watchlist: [],
 };
 
 const moviesReducer = (state: MoviesState, action: MoviesAction): MoviesState => {
@@ -93,6 +93,7 @@ interface IMoviesInterface extends MoviesState {
   dispatchFetchMovieDetails: (movieId: number) => Promise<void>;
   dispatchFetchWatchlist: (userId: string) => Promise<void>;
   dispatchClearCurrentMovie: () => void;
+  dispatchAddToWatchlist: (userId: string, movie: MovieDetailsData) => Promise<void>;
 }
 
 export const MoviesContext = createContext<IMoviesInterface | null>(null);
@@ -100,56 +101,81 @@ export const MoviesContext = createContext<IMoviesInterface | null>(null);
 const MoviesProvider = ({ children }: { children: ReactNode; }) => {
   const [state, dispatch] = useReducer(moviesReducer, initialState);
 
+  //memoized functions to reduce re-renders
+
   // Function to search for movies by title
-  const dispatchSearch = async (query: string): Promise<void> => {
-    dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
-    try {
-      const response = await axios.post('/api/search', { query });
-      const movies: MovieResult[] = response.data;
-      dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null } });
-    } catch (error: any) {
-      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
-    }
-  };
+  const dispatchSearch = useCallback(
+    async (query: string): Promise<void> => {
+      dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
+      try {
+        const response = await axios.post('/api/search', { query });
+        const movies: MovieResult[] = response.data;
+        dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null } });
+      } catch (error: any) {
+        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      }
+    }, []);
 
   // function to fetch detailed info for a specific movie by ID
-  const dispatchFetchMovieDetails = async (movieId: number): Promise<void> => {
-    dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
-    try {
-      const response = await axios.post('/api/search_movie_details', { movieId });
-      const { message, movieData } = response.data as MovieDetailsResponse;
+  const dispatchFetchMovieDetails = useCallback(
+    async (movieId: number): Promise<void> => {
+      dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
+      try {
+        const response = await axios.post('/api/search_movie_details', { movieId });
+        const { message, movieData } = response.data as MovieDetailsResponse;
 
-      // last resort error handling if object is empty
-      if (!movieData) {
-        throw new Error(message || "No movie data found");
+        // last resort error handling if object is empty
+        if (!movieData) {
+          throw new Error(message || "No movie data found");
+        }
+
+        dispatch({ type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: movieData, loading: false, error: null } });
+
+      } catch (error: any) {
+        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
       }
-
-      dispatch({ type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: movieData, loading: false, error: null } });
-
-    } catch (error: any) {
-      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
-    }
-  };
+    }, []);
 
   // function to fetch the user's watchlist
-  const dispatchFetchWatchlist = async (userId: string): Promise<void> => {
-    dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
-    try {
-      const response = await axios.get(`/api/watchlist?userId=${userId}`);
-      const { watchlist } = response.data as WatchlistResponse;
-      dispatch({ type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
-    } catch (error: any) {
-      dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
-    }
-  };
+  const dispatchFetchWatchlist = useCallback(
+    async (userId: string): Promise<void> => {
+      dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
+      try {
+        const response = await axios.get(`/api/watchlist`, { params: { userId } });
+        const { watchlist } = response.data as WatchlistResponse;
+        dispatch({ type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist: watchlist, loading: false, error: null } });
+      } catch (error: any) {
+        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      }
+    }, []);
 
   // function to clear the current movie details
-  const dispatchClearCurrentMovie = (): void => {
-    dispatch({ type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } });
-  };
+  const dispatchClearCurrentMovie = useCallback(
+    (): void => {
+      dispatch({ type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } });
+    }, []);
+
+  // function to add a movie to the user's watchlist
+  const dispatchAddToWatchlist = useCallback(
+    async (userId: string, movieData: MovieDetailsData): Promise<void> => {
+      // initiate request
+      dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
+      try {
+        const response = await axios.post('/api/watchlist', { userId, movieData });
+        const { watchlist } = response.data as WatchlistResponse;
+        // update watchlist in state
+        dispatch({ type: "ADD_TO_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
+        // clear current movie after adding to watchlist?
+
+        // display delete button in watchlist instead of add button?
+
+      } catch (error: any) {
+        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      }
+    }, []);
 
   return (
-    <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearCurrentMovie, dispatchFetchWatchlist }}>
+    <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearCurrentMovie, dispatchFetchWatchlist, dispatchAddToWatchlist }}>
       {children}
     </MoviesContext.Provider>
   );

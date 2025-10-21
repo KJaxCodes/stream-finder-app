@@ -1,5 +1,5 @@
 export type UserTokenData = {
-    _id: string;
+    id: string;
     email: string;
 };
 
@@ -46,6 +46,6 @@ export type WatchlistMovieData = {
 // response type for watchlist routes
 export type WatchlistResponse = {
     message: string;
-    watchlist: WatchlistMovieData[] | null;
+    watchlist: WatchlistMovieData[];
     errors: string[] | null;
 };
