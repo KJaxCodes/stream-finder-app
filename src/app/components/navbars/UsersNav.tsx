@@ -5,7 +5,7 @@ import { useAuthContext } from "@/app/context/AuthContext";
 import { useMoviesContext } from "@/app/context/movies/MoviesContext";
 //next
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 // React Bootstrap
 import Button from "react-bootstrap/Button";
 //styles
