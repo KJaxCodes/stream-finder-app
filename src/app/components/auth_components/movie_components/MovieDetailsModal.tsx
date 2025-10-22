@@ -5,19 +5,28 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+// AuthContext
+import { useAuthContext } from '@/app/context/AuthContext';
 // MoviesContext  
-import { useMoviesContext } from '@/app/context/MoviesContext';
-import { MovieDetailsData } from '@/app/types/shared/types';
+import { useMoviesContext } from '@/app/context/movies/MoviesContext';
+// Types
+import type { WatchlistMovieData } from '@/app/types/shared/types';
 
 interface IMovieDetailsModalProps {
     // Define any props you might need here
 };
 
+// function to check if currentMovie is in watchlist
+const isInWatchlist = (watchlist: WatchlistMovieData[], watchmodeMovieId: number): boolean => {
+    return watchlist.some(movie => movie.watchmodeId === watchmodeMovieId);
+}
+
 const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
     // grab movie details from context or props as needed
-    const { currentMovie, dispatchClearCurrentMovie, dispatchAddToWatchlist } = useMoviesContext();
+    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, watchlist } = useMoviesContext();
+    const { user } = useAuthContext();
 
-    if (!currentMovie) {
+    if (!currentMovie || !user) {
         return null; // don't render the modal if no movie is selected
     }
 
@@ -25,15 +34,18 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
         title, summary, runtime, year, imdbRating, genres, rating, posterURL, director, cast, streamingOn
     } = currentMovie;
 
+
+    const handleAddToWatchlist = async () => {
+        const { id: userId } = user;
+        await dispatchAddToWatchlist(userId, currentMovie);
+    };
+
     const handleModalClose = () => {
         dispatchClearCurrentMovie();
     };
 
-    const handleAddToWatchlist = () => {
-        console.log("Add to Watchlist clicked for movie:", currentMovie);
-        // dispatchAddToWatchlist();
-    };
     console.log("Rendering MovieDetailsModal for movie:", currentMovie);
+
 
     return (
         <>
@@ -68,15 +80,19 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
 
                 </Modal.Body>
                 <Modal.Footer>
-
-                    <Button variant="primary" onClick={handleAddToWatchlist}>
-                        Add to Watchlist
-                    </Button>
+                    {
+                        isInWatchlist(watchlist, currentMovie.id) ?
+                            <Button variant="danger">
+                                Remove from Watchlist
+                            </Button>
+                            :
+                            <Button variant="primary" onClick={handleAddToWatchlist}>
+                                ❤️ Add to Watchlist
+                            </Button>
+                    }
                     <Button variant="secondary" onClick={handleModalClose}>
                         Close
                     </Button>
-
-
                 </Modal.Footer>
             </Modal>
         </>

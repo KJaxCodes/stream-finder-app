@@ -4,39 +4,28 @@ import React, { useEffect } from "react";
 
 //
 import { useAuthContext } from "@/app/context/AuthContext";
-import { useMoviesContext } from "@/app/context/MoviesContext";
-
-//
+import { useMoviesContext } from "@/app/context/movies/MoviesContext";
+// React Bootstrap imports
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 
-
 const WatchlistComponent: React.FC = () => {
     const { dispatchFetchWatchlist, watchlist } = useMoviesContext();
     const { user } = useAuthContext();
 
-    // React.useEffect(() => {
-    //     dispatchFetchWatchlist();
-    // }, [dispatchFetchWatchlist]);
+    // dispatchFetchWatchlist is a volatile function, so we include it in the dependency array
+    useEffect(() => { 
+      if (user && user.id) {
+        dispatchFetchWatchlist(user.id);
+        console.log("Fetching watchlist for user:", user.email);
+      }
+      // handleDispatchFetchWatchlist();
+      console.log("WatchlistComponent mounted or user changed.", user);
+    }, [ user, dispatchFetchWatchlist ]);
 
-    // if (!watchlist || watchlist.length === 0) {
-    //     return <p className="mt-4">Your watchlist is empty. Add some movies to get started!</p>;
-    // }
-
-
-    useEffect(() => {
-        if (user && user.id) {
-            dispatchFetchWatchlist(user.id);
-            console.log("Fetching watchlist for user ID: ", user.id);
-        }
-    }, [user]);
-
-    console.log("user: ", user);
-
-    // Display user's email name in title, capitalize first letter, fallback to 'User' if email not available
     return (
         <div className="mt-4">
 
@@ -79,24 +68,3 @@ const WatchlistComponent: React.FC = () => {
 
 
 export default WatchlistComponent;
-
-
-
-
-
-
-//     return (
-//         <div className="mt-4">
-//             <h3>Your Watchlist</h3>
-//             {watchlist.map(({ objectId, title }) => (
-//                 <Card key={objectId} className="mb-3">
-//                     <Card.Body>
-//                         <Card.Title>{title}</Card.Title>
-//                         <Card.Text>Movie ID: {objectId}</Card.Text>
-//                     </Card.Body>
-//                 </Card>
-//             ))}
-//         </div>
-//     );
-// };
-

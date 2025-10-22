@@ -1,9 +1,11 @@
 "use client";
-// AuthConext
+import React, { useEffect } from "react";
+// AuthContext and MoviesContext
 import { useAuthContext } from "@/app/context/AuthContext";
+import { useMoviesContext } from "@/app/context/movies/MoviesContext";
 //next
 import Link from "next/link";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/router";
 // React Bootstrap
 import Button from "react-bootstrap/Button";
 //styles
@@ -13,6 +15,7 @@ import styles from "../../page.module.css";
 
 const UsersNav: React.FC<{}> = () => {
     const { user, dispatchLogout } = useAuthContext();
+    const { dispatchFetchWatchlist } = useMoviesContext();
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -24,6 +27,14 @@ const UsersNav: React.FC<{}> = () => {
         // navigate to unauthorized landing page
         router.push("/");
     };
+
+    // Fetch watchlist when user logs in
+    useEffect(() => {
+        if (user) {
+            console.log("Fetching watchlist for user:", user.email);
+            dispatchFetchWatchlist(user.id);
+        }
+    }, [user, dispatchFetchWatchlist]);
 
     return (
         <nav className={styles.navLinks}>

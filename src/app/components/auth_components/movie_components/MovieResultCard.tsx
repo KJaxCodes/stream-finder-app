@@ -5,7 +5,7 @@ import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 // MoviesContext
-import { useMoviesContext } from '@/app/context/MoviesContext'; 
+import { useMoviesContext } from '@/app/context/movies/MoviesContext';
 
 
 export type MovieResultCardProps = {
@@ -14,11 +14,7 @@ export type MovieResultCardProps = {
     year: number | string;
 };
 
-const MovieResultCard: React.FC<MovieResultCardProps> = ({
-    id,
-    title,
-    year,
-}) => {
+const MovieResultCard: React.FC<MovieResultCardProps> = ({ id, title, year }) => {
 
     const { dispatchFetchMovieDetails } = useMoviesContext();
 
@@ -32,7 +28,7 @@ const MovieResultCard: React.FC<MovieResultCardProps> = ({
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
                 <Button variant="info" className="mb-3" onClick={getMovieDetails}>
-                    ❤️ Show Details
+                    ➕ Show Details
                 </Button>
                 <div>
                     <p><strong>Year:</strong> {year}</p>
