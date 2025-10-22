@@ -7,7 +7,6 @@ export interface IUser extends Document {
     email: string;
     password: string;
     watchlist: { movieId: string; title: string }[];
-    favorites: { movieId: string; comment: string }[];
 }
 
 // Define the User schema
@@ -33,14 +32,6 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
     },
     // User's watchlist of movies (MovieModel references)
     watchlist: [{ type: Schema.Types.ObjectId, ref: 'Movie', required: true }], //example: [ "648a1f2e5f4c3b0012345678", "648a1f2e5f4c3b0012345679" ]
-    // User's favorite movies with optional comments?
-    favorites: [
-        {
-            movieId: { type: String, required: true },
-            comment: { type: String, default: "" },
-        },
-    ]
-
 });
 
 // if the model is already compiled, use it, otherwise compile a new model

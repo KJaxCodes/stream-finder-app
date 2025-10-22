@@ -5,7 +5,7 @@ import React from "react";
 import Spinner from 'react-bootstrap/Spinner';
 // Context imports  
 import { useAuthContext } from "../../context/AuthContext";
-import { useMoviesContext } from "../../context/MoviesContext";
+import { useMoviesContext } from "../../context/movies/MoviesContext";
 
 const LoadingComponent: React.FC = () => {
     const { loading: authLoading } = useAuthContext();

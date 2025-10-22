@@ -2,7 +2,7 @@
 // Component to search movie titles, display results, and allow users to add movies to their watchlist
 import React, { useState } from 'react';
 // Movies context
-import { useMoviesContext } from '../../context/MoviesContext';
+import { useMoviesContext } from '../../context/movies/MoviesContext';
 // Bootstrap components
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';

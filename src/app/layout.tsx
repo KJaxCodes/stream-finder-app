@@ -14,7 +14,9 @@ import AuthProvider from "./context/AuthContext";
 import type { Metadata } from "next";
 import { UserTokenData } from './types/shared/types';
 import LoadingComponent from './components/ui_helpers/loading_component';
-import MoviesProvider from './context/MoviesContext';
+// Movies Context
+import MoviesProvider from './context/movies/MoviesContext';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,7 +38,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // check for a login cookie and hydrate the auth context if it exists
-  const cookieStore = await cookies();
+  const cookieStore =  await cookies();
   const token = cookieStore.get("token")?.value;
   let initialUser: UserTokenData | null = authenticateToken(token);
 
