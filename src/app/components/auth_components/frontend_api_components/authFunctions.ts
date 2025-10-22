@@ -11,6 +11,7 @@ export const handleSignup = async (email: string, password: string): Promise<boo
         return true;
     } catch (error: unknown) {
         console.log(error);
+        console.log("Signup error");
         return false;
     }
 };

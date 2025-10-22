@@ -1,6 +1,6 @@
 "use client";
 // Component to search movie titles, display results, and allow users to add movies to their watchlist
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Movies context
 import { useMoviesContext } from '../../context/movies/MoviesContext';
 // Bootstrap components
@@ -21,13 +21,13 @@ const SearchComponent: React.FC<{}> = () => {
     const { searchResults, dispatchSearch } = useMoviesContext();
 
 
-    // function to handle search button click
+    // function to handle search button click, then clear the search input
     const handleSearchButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        console.log("Searching for:", query);
         await dispatchSearch(query);
         setQuery('');
     };
+
 
     // function to handle form input changes
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {

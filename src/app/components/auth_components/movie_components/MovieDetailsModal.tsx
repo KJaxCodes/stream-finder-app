@@ -26,26 +26,26 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
     const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, watchlist } = useMoviesContext();
     const { user } = useAuthContext();
 
+    // If no current movie is selected or user is not logged in, don't render the modal
     if (!currentMovie || !user) {
-        return null; // don't render the modal if no movie is selected
+        return null; 
     }
 
+    // Destructure movie details
     const {
         title, summary, runtime, year, imdbRating, genres, rating, posterURL, director, cast, streamingOn
     } = currentMovie;
 
-
+    // Handler to add movie to watchlist, pass userId and currentMovie
     const handleAddToWatchlist = async () => {
         const { id: userId } = user;
         await dispatchAddToWatchlist(userId, currentMovie);
     };
 
+    // Handler to close modal
     const handleModalClose = () => {
         dispatchClearCurrentMovie();
     };
-
-    console.log("Rendering MovieDetailsModal for movie:", currentMovie);
-
 
     return (
         <>
