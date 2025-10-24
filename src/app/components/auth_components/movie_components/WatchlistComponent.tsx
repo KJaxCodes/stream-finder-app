@@ -13,7 +13,7 @@ import Col from "react-bootstrap/Col";
 
 
 const WatchlistComponent: React.FC = () => {
-    const { dispatchFetchWatchlist, watchlist } = useMoviesContext();
+    const { dispatchFetchWatchlist, dispatchRemoveFromWatchlist, watchlist } = useMoviesContext();
     const { user } = useAuthContext();
 
     // dispatchFetchWatchlist is a volatile function, so we include it in the dependency array
@@ -25,6 +25,18 @@ const WatchlistComponent: React.FC = () => {
       // handleDispatchFetchWatchlist();
       console.log("WatchlistComponent mounted or user changed.", user);
     }, [ user, dispatchFetchWatchlist ]);
+
+    // handle case where watchlist is empty
+    if (watchlist.length === 0) {
+        return <p>Your watchlist is empty. Start adding some movies!</p>;
+    }
+
+    // handle delete button click to remove movie from user's watchlist
+    const handleRemoveFromWatchlist = (movieId: number) => {
+        if (user && user.id) {
+            dispatchRemoveFromWatchlist(user.id, movieId);
+        }
+    };
 
     return (
         <div className="mt-4">
@@ -56,7 +68,7 @@ const WatchlistComponent: React.FC = () => {
                                     <strong>Streaming on:</strong>{" "}
                                     {streamingOn.length > 0 ? streamingOn.join(", ") : "Not available"}
                                 </Card.Text>
-                                <Button variant="outline-danger" size="sm">Delete</Button>
+                                <Button variant="outline-danger" size="sm" onClick={handleRemoveFromWatchlist}>Delete</Button>
                             </Col>
                         </Row>
                     </Card.Body>
