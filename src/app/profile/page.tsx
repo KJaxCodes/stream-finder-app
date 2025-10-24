@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 // Additional Components
 import UsersNav from "../components/navbars/UsersNav";
-import WatchlistComponent from "../components/auth_components/movie_components/WatchlistComponent";
+import WatchlistComponent from "../components/movie_components/WatchlistComponent";
 // auth helpers 
 import { runProtectedRoute } from "../api/users/helpers/authHelpers";
 // styles

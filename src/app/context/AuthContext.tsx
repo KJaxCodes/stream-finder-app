@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useReducer } from 'react';
 import type { ReactNode } from 'react';
 // api functions
-import { handleSignup, handleLogin, handleLogout } from '../components/auth_components/frontend_api_components/authFunctions';
+import { handleSignup, handleLogin, handleLogout } from '../components/frontend_api_components/authFunctions';
 // types
 import type { UserTokenData } from "@/app/types/shared/types";
 

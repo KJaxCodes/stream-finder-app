@@ -89,31 +89,31 @@ describe("User Model and /users API tests", () => {
     it("Should not allow signup with an existing email", async () => {
 
         // First, create a user
-        const firstRequest = new NextRequest("http://localhost:3000/api/signup", {
-            method: "POST",
-            body: JSON.stringify({
-                email: "duplicateuser@mail.com",
-                password: "password123"
-            })
-        });
-        await POSTUserSignup(firstRequest);
+        // const firstRequest = new NextRequest("http://localhost:3000/api/signup", {
+        //     method: "POST",
+        //     body: JSON.stringify({
+        //         email: "duplicateuser@mail.com",
+        //         password: "password123"
+        //     })
+        // });
+        // await POSTUserSignup(firstRequest);
 
         // Attempt to create another user with the same email
-        const secondRequest = new NextRequest("http://localhost:3000/api/signup", {
+        const request = new NextRequest("http://localhost:3000/api/signup", {
             method: "POST",
             body: JSON.stringify({
-                email: "duplicateuser@mail.com",
-                password: "password123"
+                email: "testuser@mail.com",
+                password: "password"
             })
         });
 
-        const res = await POSTUserSignup(secondRequest);
+        const res = await POSTUserSignup(request);
         expect(res.status).toBe(400);
         const data = await res.json();
         expect(data.message).toBe("User already exists");
 
         let users = await User.find({});
         console.log("Users in DB after duplicate signup attempt:", users);
-        expect(users.length).toBe(2); // Two users should exist: one from previous test and one from this test
+        expect(users.length).toBe(1); // One user should exist: the one from the previous test
     });
 });

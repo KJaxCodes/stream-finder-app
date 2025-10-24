@@ -8,8 +8,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 // additional components
-import MovieDetailsModal from '@/app/components/auth_components/movie_components/MovieDetailsModal';
-import MovieResultCard from '@/app/components/auth_components/movie_components/MovieResultCard';
+import MovieDetailsModal from '@/app/components/movie_components/MovieDetailsModal';
+import MovieResultCard from '@/app/components/movie_components/MovieResultCard';
 // types
 
 

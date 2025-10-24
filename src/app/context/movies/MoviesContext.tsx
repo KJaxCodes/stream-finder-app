@@ -74,7 +74,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
 
   // function to remove a movie from a user's watchlist
   const dispatchRemoveFromWatchlist = useCallback(
-    async (userId: string, movieId: number): Promise<void> => {
+    async (userId: string, movieId: string): Promise<void> => {
       dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
       try {
         const response = await axios.delete("/api/watchlist", { data: { userId, movieId } });

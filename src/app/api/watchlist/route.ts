@@ -147,11 +147,13 @@ export async function DELETE(request: NextRequest) {
 
         // find user by ID, user will include watchlist reference to get movie ID to delete
         const user = await User.findById(userId) as IUser | null;
-        if (!user) {
+        const movie = await Movie.findOne({ _id: movieId, user: userId }) as IMovie | null;
+
+        if (!user || !movie) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Cannot delete from watchlist",
                 watchlist: [],
-                errors: ["User not found"]
+                errors: ["User or Movie not found"]
             }, { status: 404 });
         }
 
