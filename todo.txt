@@ -1,3 +1,7 @@
+- in the api route to delete movie, check if token cookie exists, verify (jwtverify function), confirm it is valid and not expired
+  otherwise, throw error "login expired, redirect to login"
+- protect routes - apply similar logic to searching and adding to watchlist routes
+- delete button in the moviedetailsmodal
 - remove console.logs
 - google drive for capstone steps or add to github repo?
 - 
@@ -5,6 +9,8 @@
 
 
 tests
+
+unit = isolated functions = 
 
 -signup
     -duplicate user cannot signup
@@ -20,5 +26,8 @@ tests
 -movies
     -user cannot add duplicate movie to watchlist
     -
+    - fetch movies
+    - show movie detials
+    - remove from watchlist
 
 

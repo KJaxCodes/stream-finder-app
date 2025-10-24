@@ -23,12 +23,12 @@ const isInWatchlist = (watchlist: WatchlistMovieData[], watchmodeMovieId: number
 
 const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
     // grab movie details from context or props as needed
-    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, watchlist } = useMoviesContext();
+    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, dispatchRemoveFromWatchlist, watchlist } = useMoviesContext();
     const { user } = useAuthContext();
 
     // If no current movie is selected or user is not logged in, don't render the modal
     if (!currentMovie || !user) {
-        return null; 
+        return null;
     }
 
     // Destructure movie details
@@ -40,6 +40,20 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
     const handleAddToWatchlist = async () => {
         const { id: userId } = user;
         await dispatchAddToWatchlist(userId, currentMovie);
+    };
+
+    // Handler to remove movie from watchlist
+    const handleRemoveFromWatchlist = () => {
+        if (user && user.id) {
+            // find the movie in watchlist by matching watchmodeId
+            const match = watchlist.find(movie => movie.watchmodeId === currentMovie.id);
+            // if found, dispatch remove action with its objectId
+            if (match) {
+                dispatchRemoveFromWatchlist(user.id, match.objectId);
+            } else {
+                console.warn("Movie not found in watchlist for removal.");
+            }
+        }
     };
 
     // Handler to close modal
@@ -82,7 +96,7 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
                 <Modal.Footer>
                     {
                         isInWatchlist(watchlist, currentMovie.id) ?
-                            <Button variant="danger">
+                            <Button variant="danger" onClick={handleRemoveFromWatchlist}>
                                 Remove from Watchlist
                             </Button>
                             :

@@ -22,16 +22,16 @@ const WatchlistComponent: React.FC = () => {
             dispatchFetchWatchlist(user.id);
             console.log("Fetching watchlist for user:", user.email);
         }
-        // handleDispatchFetchWatchlist();
+        // HandleDispatchFetchWatchlist();
         console.log("WatchlistComponent mounted or user changed.", user);
     }, [user, dispatchFetchWatchlist]);
 
-    // handle case where watchlist is empty
+    // Handle case where watchlist is empty
     if (watchlist.length === 0) {
         return <p>Your watchlist is empty. Start adding some movies!</p>;
     }
 
-    // handle delete button click to remove movie from user's watchlist
+    // Handler to remove movie from watchlist
     const handleRemoveFromWatchlist = (movieId: string) => {
         if (user && user.id) {
             dispatchRemoveFromWatchlist(user.id, movieId);

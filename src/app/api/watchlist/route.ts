@@ -9,6 +9,7 @@ import Movie from "@/models/movieModel";
 
 import { connect } from "@/dbConfig/dbConfig";
 // TODO: protect the route 
+import { cookies } from "next/headers";
 import type { IUser } from "@/models/userModel";
 import type { IMovie } from "@/models/movieModel";
 import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/app/types/shared/types";
@@ -131,6 +132,10 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         await connect();
+        const cookiesList = await cookies();
+        // decode cookies if needed for authentication, then check if matches userId in body
+        
+        console.log("Cookies in DELETE /api/watchlist:", cookiesList);
         const reqBody = await request.json();
 
         const { userId, movieId } = reqBody as { userId: string; movieId: string };
