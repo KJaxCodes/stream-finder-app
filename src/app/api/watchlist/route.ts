@@ -155,8 +155,12 @@ export async function DELETE(request: NextRequest) {
             }, { status: 404 });
         }
 
-        // remove movie from user's watchlist
+        // remove movie from the movie collection
         await Movie.deleteOne({ _id: movieId, user: userId });
+
+        // remove movie object id from user's watchlist array
+        user.watchlist = user.watchlist.filter(id => id.toString() !== movieId);
+        await user.save();
 
         // Fetch updated watchlist
         const updatedWatchlist = await Movie.find({ user: userId }) as IMovie[];

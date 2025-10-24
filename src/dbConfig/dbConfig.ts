@@ -1,39 +1,31 @@
 import mongoose from "mongoose";
 import type { Mongoose } from "mongoose";
 
-const MONGO_URI = process.env.MONGO_URI;
-console.log("MONGO_URI:", MONGO_URI);
-console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("NODE ENV: ", process.env.NODE_ENV);
 
-if (!MONGO_URI) {
-    throw new Error("Please define the MONGO_URI environment variable inside .env.local");
-}
 
-type cachedConnectionObject = {
-    connection: Mongoose | null;
-    connectionPromise: Promise<Mongoose> | null;
+type CachedConnectionObject = {
+  connection: Mongoose | null;
+  connectionPromise: Promise<Mongoose> | null;
 }
 
 declare global {
-    // allow global `var` declarations
-    // eslint-disable-next-line no-var
-    var mongooseCache: cachedConnectionObject | undefined;
+  var mongooseCache: CachedConnectionObject | undefined;
 }
 
-// Connect to MongoDB
 
-// Use a cached connection if available
-let cachedConnectionObject = global.mongooseCache ?? { connection: null, connectionPromise: null };
-
-if (process.env.NODE_ENV === "development") {
-    // In development mode, use a global variable so that the value
-    // is preserved across module reloads caused by HMR (Hot Module Replacement).
-    global.mongooseCache = cachedConnectionObject;
-}
+let cachedConnectionObject: CachedConnectionObject = global.mongooseCache ?? { connection: null, connectionPromise: null };
 
 export async function connect(): Promise<Mongoose> {
+
+    const MONGO_URI = process.env.MONGO_URI;
+    console.log("MONGO_URI:", MONGO_URI);
+
+    if (!MONGO_URI && (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "production")) {
+        throw new Error("Please define the MONGO_URI environment variable inside .env.local");
+    }
     try {
-        // check if we have a cached connection
+        // check of a cached connection exists 
         if (cachedConnectionObject.connection) {
             return cachedConnectionObject.connection;
         }

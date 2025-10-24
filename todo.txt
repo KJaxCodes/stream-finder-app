@@ -1,0 +1,24 @@
+- remove console.logs
+- google drive for capstone steps or add to github repo?
+- 
+
+
+
+tests
+
+-signup
+    -duplicate user cannot signup
+    -user without email cannot signup
+    -user without password cannot signup
+
+-login
+    -login route works with correct info
+    -user cannot login without email address
+    -user cannot login without password
+    -user cannot login without signing up first
+
+-movies
+    -user cannot add duplicate movie to watchlist
+    -
+
+
