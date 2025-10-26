@@ -8,7 +8,7 @@ import User from "@/models/userModel";
 import Movie from "@/models/movieModel";
 
 import { connect } from "@/dbConfig/dbConfig";
-// TODO: protect the route 
+import { verifyServerAuth } from "../../helpers/authHelpers";
 import { cookies } from "next/headers";
 import type { IUser } from "@/models/userModel";
 import type { IMovie } from "@/models/movieModel";
@@ -134,7 +134,7 @@ export async function DELETE(request: NextRequest) {
         await connect();
         const cookiesList = await cookies();
         // decode cookies if needed for authentication, then check if matches userId in body
-        
+
         console.log("Cookies in DELETE /api/watchlist:", cookiesList);
         const reqBody = await request.json();
 

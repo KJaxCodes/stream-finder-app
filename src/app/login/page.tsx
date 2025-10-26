@@ -4,7 +4,7 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 // auth helpers
-import { redirectIfAuthenticated } from "../api/users/helpers/authHelpers";
+import { redirectIfAuthenticated } from "../api/helpers/authHelpers";
 // Additional Components
 import LoginComponent from "../components/auth_components/LoginComponent";
 

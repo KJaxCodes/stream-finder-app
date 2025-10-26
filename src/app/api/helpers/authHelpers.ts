@@ -44,3 +44,21 @@ export const redirectIfAuthenticated = async (): Promise<void> => {
 
     if (token && authenticateToken(token)) return redirect('/home');
 };
+
+
+// Function to verify authentication on server side
+export const verifyServerAuth = async (): Promise<UserTokenData> => {
+  // Get cookies from the request
+    const cookieStore = await cookies();
+  // Extract the token from cookies  
+    const token = cookieStore.get("token")?.value;
+  // Authenticate the token
+    const decoded = authenticateToken(token);
+  // If token is missing or invalid, throw an error
+    if (!token || !decoded) {
+        console.log("Authentication failed");
+        throw new Error("login expired");
+    }
+  // Return the decoded user data so it can be used in the server-side logic  
+    return decoded;
+}

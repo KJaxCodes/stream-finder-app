@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 // auth helpers 
-import { authenticateToken } from './api/users/helpers/authHelpers';
+import { authenticateToken } from './api/helpers/authHelpers';
 import { Geist, Geist_Mono } from "next/font/google";
 // global css
 // @ts-ignore
@@ -38,7 +38,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // check for a login cookie and hydrate the auth context if it exists
-  const cookieStore =  await cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   let initialUser: UserTokenData | null = authenticateToken(token);
 

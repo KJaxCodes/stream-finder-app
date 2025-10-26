@@ -3,7 +3,7 @@ import React from "react";
 // additional components
 import UsersNav from "../components/navbars/UsersNav";
 // auth helpers 
-import { runProtectedRoute } from "../api/users/helpers/authHelpers";
+import { runProtectedRoute } from "../api/helpers/authHelpers";
 // styles
 import styles from "../page.module.css";
 
