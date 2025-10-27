@@ -16,7 +16,7 @@ import { connect } from "@/dbConfig/dbConfig";
 export async function POST(request: NextRequest) {
     try {
         await connect();
-        console.log("Run the login route");
+        // console.log("Run the login route");
         const reqBody = await request.json();
         const { email, password } = reqBody;
 

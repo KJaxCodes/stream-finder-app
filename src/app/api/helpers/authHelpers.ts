@@ -5,8 +5,7 @@ import { verify } from "jsonwebtoken";
 // types
 import type { UserTokenData } from '@/app/types/shared/types';
 
-// Function to authenticate token and return user data if valid
-
+// Function to authenticate JWT token
 export const authenticateToken = (token: string | undefined): UserTokenData | null => {
   if (!token) {
     return null;
@@ -28,37 +27,34 @@ export const authenticateToken = (token: string | undefined): UserTokenData | nu
 };
 
 export const runProtectedRoute = async (): Promise<void> => {
-    if (typeof window !== 'undefined') return;
+  if (typeof window !== 'undefined') return;
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-    if (!token || !authenticateToken(token)) return redirect('/login');
+  if (!token || !authenticateToken(token)) return redirect('/login');
 };
 
 export const redirectIfAuthenticated = async (): Promise<void> => {
-    if (typeof window !== 'undefined') return;
+  if (typeof window !== 'undefined') return;
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-    if (token && authenticateToken(token)) return redirect('/home');
+  if (token && authenticateToken(token)) return redirect('/home');
 };
 
-
-// Function to verify authentication on server side
-export const verifyServerAuth = async (): Promise<UserTokenData> => {
+// Function to verify authentication on the server side
+export const verifyServerAuth = async (): Promise<UserTokenData | null> => {
   // Get cookies from the request
-    const cookieStore = await cookies();
-  // Extract the token from cookies  
-    const token = cookieStore.get("token")?.value;
+  const cookieStore = await cookies();
+  // Extract the token from cookies
+  const token = cookieStore.get("token");
+  if (!token) return null;
   // Authenticate the token
-    const decoded = authenticateToken(token);
+  const decoded = authenticateToken(token.value);
   // If token is missing or invalid, throw an error
-    if (!token || !decoded) {
-        console.log("Authentication failed");
-        throw new Error("login expired");
-    }
-  // Return the decoded user data so it can be used in the server-side logic  
-    return decoded;
-}
+  if (!decoded) return null;
+  // Return the decoded user data so it can be used in the server-side logic
+  return decoded;
+};

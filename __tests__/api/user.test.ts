@@ -17,6 +17,7 @@ describe("User Model and /users API tests", () => {
         const URI = mongoServer.getUri();
         console.log("Our temp test database URI: ", URI);
         process.env.MONGO_URI = URI;
+        process.env.JWT_SECRET = "testsecretkey";
         await mongoose.connect(process.env.MONGO_URI);
         console.log("Test database running at: ", process.env.MONGO_URI);
     });
@@ -123,5 +124,34 @@ describe("User Model and /users API tests", () => {
 
     });
 
+    // user cannot login without signing up first
+    it("Should not allow login without signing up first", async () => {
+        const request = new NextRequest("http://localhost:3000/api/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: "notsignuedup@mail.com",
+                password: "password"
+            })
+        });
+        const res = await POSTUserLogin(request);
+        const data = await res.json();
+        expect(res.status).toBe(400);
+        expect(data.message).toBe("User not found");
+    });
+
+    // user cannot login with incorrect password
+    it("Should not allow login with incorrect password", async () => {
+        const request = new NextRequest("http://localhost:3000/api/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: "testuser@mail.com",
+                password: "wrongpassword"
+            })
+        });
+        const res = await POSTUserLogin(request);
+        const data = await res.json();
+        expect(res.status).toBe(400);
+        expect(data.message).toBe("Invalid password");
+    }); 
 
 });

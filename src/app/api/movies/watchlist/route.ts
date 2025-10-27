@@ -8,8 +8,10 @@ import User from "@/models/userModel";
 import Movie from "@/models/movieModel";
 
 import { connect } from "@/dbConfig/dbConfig";
+// auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 import { cookies } from "next/headers";
+// types imports
 import type { IUser } from "@/models/userModel";
 import type { IMovie } from "@/models/movieModel";
 import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/app/types/shared/types";
@@ -18,18 +20,16 @@ import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/
 // TODO: Data Types for reqBody?
 export async function GET(request: NextRequest) {
     try {
-        await connect();
-        const reqURL = new URL(request.url);
-
-        console.log("Full request URL: ", reqURL);
-        const userId = reqURL.searchParams.get("userId");
-
-        if (!userId) {
+        const userTokenData = await verifyServerAuth();
+        if (!userTokenData) {
             return NextResponse.json<WatchlistResponse>({
-                message: "Cannot retrieve watchlist", watchlist: [], errors: ["Missing user data (id) to retrieve watchlist"]
-            }, { status: 400 }
+                message: "Cannot retrieve watchlist", watchlist: [], errors: ["User login invalid"]
+            }, { status: 401 }
             );
         }
+
+        await connect();
+        const { id: userId } = userTokenData;
 
         const user = await User.findById(userId);
 
@@ -52,7 +52,6 @@ export async function GET(request: NextRequest) {
             watchmodeId: movie.watchmodeId,
         }));
 
-        console.log("User's watchlist: ", watchlist);
         return NextResponse.json<WatchlistResponse>({
             message: "Watchlist fetched successfully", watchlist: watchlistData, errors: null
         }, { status: 200 }
@@ -70,6 +69,14 @@ export async function GET(request: NextRequest) {
 // Add a movie to the authenticated user's watchlist
 export async function POST(request: NextRequest) {
     try {
+        const userTokenData = await verifyServerAuth();
+        if (!userTokenData) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot add to watchlist", watchlist: [], errors: ["User login invalid"]
+            }, { status: 401 }
+            );
+        }
+
         await connect();
         const reqBody = await request.json();
 
@@ -131,18 +138,27 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
     try {
+        const userTokenData = await verifyServerAuth();
+        if (!userTokenData) {
+            return NextResponse.json<WatchlistResponse>({
+                message: "Cannot delete from watchlist",
+                watchlist: [],
+                errors: ["User login invalid"]
+            }, { status: 401 }
+            );
+        }
+
         await connect();
-        const cookiesList = await cookies();
-        // decode cookies if needed for authentication, then check if matches userId in body
 
-        console.log("Cookies in DELETE /api/watchlist:", cookiesList);
         const reqBody = await request.json();
+        // use userId from token data for security
+        const { id: userId } = userTokenData;
+        // extract movieId from request body
+        const { movieId } = reqBody as { movieId: string };
 
-        const { userId, movieId } = reqBody as { userId: string; movieId: string };
-        console.log("DELETE request body: ", reqBody);
 
-        // basic validation check to ensure userId and movieId are provided
-        if (!userId || !movieId) {
+        // basic validation check to ensure movieId is provided
+        if (!movieId) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Cannot delete from watchlist",
                 watchlist: [],
