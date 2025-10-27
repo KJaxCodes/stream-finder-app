@@ -23,6 +23,8 @@ unit = isolated functions =
     -user cannot login without password
     -user cannot login without signing up first
 
+-logout
+
 -movies
     -user cannot add duplicate movie to watchlist
     -

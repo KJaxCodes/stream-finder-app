@@ -10,6 +10,7 @@ import User from "../../src/models/userModel";
 describe("User Model and /users API tests", () => {
     let mongoServer: MongoMemoryServer;
 
+    // do I need a mock/test jwt secret?
     beforeAll(async () => {
         console.log("Will run before tests");
         mongoServer = await MongoMemoryServer.create();
@@ -88,16 +89,6 @@ describe("User Model and /users API tests", () => {
 
     it("Should not allow signup with an existing email", async () => {
 
-        // First, create a user
-        // const firstRequest = new NextRequest("http://localhost:3000/api/signup", {
-        //     method: "POST",
-        //     body: JSON.stringify({
-        //         email: "duplicateuser@mail.com",
-        //         password: "password123"
-        //     })
-        // });
-        // await POSTUserSignup(firstRequest);
-
         // Attempt to create another user with the same email
         const request = new NextRequest("http://localhost:3000/api/signup", {
             method: "POST",
@@ -116,4 +107,21 @@ describe("User Model and /users API tests", () => {
         console.log("Users in DB after duplicate signup attempt:", users);
         expect(users.length).toBe(1); // One user should exist: the one from the previous test
     });
+
+    // Successful login with correct credentials
+    it("Should successfully login with correct credentials", async () => {
+        const request = new NextRequest("http://localhost:3000/api/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: "testuser@mail.com",
+                password: "password"
+            })
+        });
+        const res = await POSTUserLogin(request);
+        const data = await res.json();
+        expect(res.status).toBe(200);
+
+    });
+
+
 });
