@@ -16,11 +16,13 @@ import type { IUser } from "@/models/userModel";
 import type { IMovie } from "@/models/movieModel";
 import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/app/types/shared/types";
 
-// GET /api/watchlist
+
+// GET /api/movies/watchlist
 // TODO: Data Types for reqBody?
 export async function GET(request: NextRequest) {
     try {
         const userTokenData = await verifyServerAuth();
+        console.log("User token data in GET /movies/watchlist: ", userTokenData);
         if (!userTokenData) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Cannot retrieve watchlist", watchlist: [], errors: ["User login invalid"]
@@ -29,16 +31,20 @@ export async function GET(request: NextRequest) {
         }
 
         await connect();
-        const { id: userId } = userTokenData;
 
+        const { id: userId } = userTokenData;
+        console.log("Line 36 route.ts Fetching watchlist for userId: ", userId);
         const user = await User.findById(userId);
 
         if (!user) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Cannot retrieve watchlist", watchlist: [], errors: ["User not found"]
             }, { status: 404 }
+
             );
         }
+
+
 
         const watchlist = await Movie.find({ user: userId }) as IMovie[];
 
@@ -57,7 +63,7 @@ export async function GET(request: NextRequest) {
         }, { status: 200 }
         );
     } catch (error: any) {
-        console.error("Error in GET /api/watchlist:", error);
+        console.error("Error in GET /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
             message: "Server error", watchlist: [], errors: [error.message || "Unknown GET /watchlist error"]
         }, { status: 500 }
@@ -65,7 +71,7 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST /api/watchlist
+// POST /api/movies/watchlist
 // Add a movie to the authenticated user's watchlist
 export async function POST(request: NextRequest) {
     try {
@@ -125,7 +131,7 @@ export async function POST(request: NextRequest) {
         );
 
     } catch (error: any) {
-        console.error("Error in POST /api/watchlist:", error);
+        console.error("Error in POST /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
             message: "Server error", watchlist: [], errors: [error.message || "Unknown POST /watchlist error"]
         }, { status: 500 }
@@ -133,7 +139,7 @@ export async function POST(request: NextRequest) {
     }
 };
 
-// DELETE /api/watchlist
+// DELETE /api/movies/watchlist
 // Remove a movie from the authenticated user's watchlist
 
 export async function DELETE(request: NextRequest) {
@@ -209,7 +215,7 @@ export async function DELETE(request: NextRequest) {
     }
     // CATCH block to handle errors
     catch (error: any) {
-        console.error("Error in DELETE /api/watchlist:", error);
+        console.error("Error in DELETE /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
             message: "Server error",
             watchlist: [],

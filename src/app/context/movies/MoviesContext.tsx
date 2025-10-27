@@ -27,7 +27,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     async (query: string): Promise<void> => {
       dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
       try {
-        const response = await axios.post('/api/search', { query });
+        const response = await axios.post('/api/movies/search', { query });
         const movies: MovieResult[] = response.data;
         dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null } });
       } catch (error: any) {
@@ -41,7 +41,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     async (movieId: number): Promise<void> => {
       dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
       try {
-        const response = await axios.post('/api/search_movie_details', { movieId });
+        const response = await axios.post('/api/movies/search_movie_details', { movieId });
         const { message, movieData } = response.data as MovieDetailsResponse;
 
         // last resort error handling if object is empty
@@ -62,7 +62,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     async (userId: string, movieData: MovieDetailsData): Promise<void> => {
       dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
       try {
-        const response = await axios.post("/api/watchlist", { userId, movieData });
+        const response = await axios.post("/api/movies/watchlist", { userId, movieData });
         const { watchlist } = response.data as WatchlistResponse;
         dispatch({ type: "ADD_TO_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
       } catch (error: any) {
@@ -77,7 +77,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     async (userId: string, movieId: string): Promise<void> => {
       dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
       try {
-        const response = await axios.delete("/api/watchlist", { data: { userId, movieId } });
+        const response = await axios.delete("/api/movies/watchlist", { data: { userId, movieId } });
         const { watchlist } = response.data as WatchlistResponse;
         dispatch({ type: "REMOVE_FROM_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
       } catch (error: any) {
@@ -92,7 +92,7 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     async (userId: string): Promise<void> => {
       dispatch({ type: "WATCHLIST_REQUEST", payload: { loading: true, error: null } });
       try {
-        const response = await axios.get('/api/watchlist', { params: { userId } });
+        const response = await axios.get('/api/movies/watchlist', { params: { userId } });
         const { watchlist } = response.data as WatchlistResponse;
         console.log("Fetched watchlist:", watchlist);
         dispatch({ type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });

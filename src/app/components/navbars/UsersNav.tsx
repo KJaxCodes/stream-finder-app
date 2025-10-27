@@ -31,7 +31,7 @@ const UsersNav: React.FC<{}> = () => {
     // Fetch watchlist when user logs in
     useEffect(() => {
         if (user) {
-            console.log("Fetching watchlist for user:", user.email);
+            console.log("From UsersNav, Fetching watchlist for user:", user.email);
             dispatchFetchWatchlist(user.id);
         }
     }, [user, dispatchFetchWatchlist]);

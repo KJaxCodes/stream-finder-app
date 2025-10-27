@@ -20,7 +20,7 @@ const WatchlistComponent: React.FC = () => {
     useEffect(() => {
         if (user && user.id) {
             dispatchFetchWatchlist(user.id);
-            console.log("Fetching watchlist for user:", user.email);
+            console.log("In WatchlistComponent,Fetching watchlist for user:", user.email);
         }
         // HandleDispatchFetchWatchlist();
         console.log("WatchlistComponent mounted or user changed.", user);
