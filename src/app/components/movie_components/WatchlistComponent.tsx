@@ -19,7 +19,7 @@ const WatchlistComponent: React.FC = () => {
     // dispatchFetchWatchlist is a volatile function, so we include it in the dependency array
     useEffect(() => {
         if (user && user.id) {
-            dispatchFetchWatchlist(user.id);
+            dispatchFetchWatchlist();
             console.log("In WatchlistComponent,Fetching watchlist for user:", user.email);
         }
         // HandleDispatchFetchWatchlist();

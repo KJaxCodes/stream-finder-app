@@ -19,7 +19,7 @@ export type MoviesState = {
 export interface IMoviesInterface extends MoviesState {
   dispatchSearch: (query: string) => Promise<void>;
   dispatchFetchMovieDetails: (watchmodeMovieId: number) => Promise<void>;
-  dispatchFetchWatchlist: (userId: string) => Promise<void>;
+  dispatchFetchWatchlist: () => Promise<void>;
   dispatchAddToWatchlist: (userId: string, movieData: MovieDetailsData) => Promise<void>;
   dispatchClearCurrentMovie: () => void;
   dispatchRemoveFromWatchlist: (userId: string, movieId: string) => Promise<void>;

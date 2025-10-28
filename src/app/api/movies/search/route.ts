@@ -1,6 +1,8 @@
 //this route will handle a search request and call the watchmode api
 
 import axios from "axios";
+// auth helpers
+import { verifyServerAuth } from "../../helpers/authHelpers";
 
 type MovieData = {
     id: number;
@@ -12,6 +14,14 @@ type MovieData = {
 
 export async function POST(request: Request) {
     try {
+        const userTokenData = await verifyServerAuth();
+        if (!userTokenData) {
+            return new Response(
+                JSON.stringify({ message: "Unauthorized" }),
+                { status: 401 }
+            );
+        }
+
         const reqBody = await request.json();
         const { query } = reqBody;
         console.log("Search query: ", query);
@@ -27,18 +37,15 @@ export async function POST(request: Request) {
 
         const BASE_URL = "https://api.watchmode.com/v1";
 
-        // Add validation for query later
-
         // Call the watchmode api to search for the movie
         const searchRes = await axios.get(`${BASE_URL}/search/`, {
             params: {
                 apiKey: apiKey,
                 search_field: "name",
                 search_value: query,
-                // types: "movie",
+   
             },
         });
-        //console.log("Search results: ", searchRes.data.title_results);
 
         if (!searchRes.data || !searchRes.data.title_results || searchRes.data.title_results.length === 0) {
             return new Response(JSON.stringify({ message: "No results found" }), {
@@ -47,7 +54,7 @@ export async function POST(request: Request) {
         }
 
         const results = searchRes.data.title_results;
-        // filter only movies AND extract only id, title, year, type
+        // filter AND extract only id, title, year, type
         const movies: MovieData[] = results.filter((movie: any) => movie.tmdb_type === "movie").map((movie: any) => ({
             id: movie.id,
             title: movie.name,
