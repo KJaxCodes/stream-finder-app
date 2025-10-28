@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 // React imports
-import React from "react";
+import React, {useEffect} from "react";
 // React bootstrap imports
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -28,7 +28,7 @@ export default async function SearchPage() {
         <div className={styles.page}>
             <main className={styles.main}>
                 <UsersNav />
-                <h1>Search Page For Logged In Users</h1>
+                <h1>Search Movies</h1>
                 <Row>
                     <Col>
                         <SearchComponent />

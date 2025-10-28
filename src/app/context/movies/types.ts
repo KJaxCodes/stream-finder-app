@@ -8,11 +8,11 @@ export type MovieResult = {
 };
 
 export type MoviesState = {
-  searchResults: MovieResult[]; // Array of movie results from search
+  searchResults: MovieResult[] | null; // Array of movie results from search
   currentMovie: MovieDetailsData | null; // Detailed info of the selected movie
   loading: boolean; // Loading state for async operations
   error: string | null; // Error message if any operation fails
-   // current watchlist array of movie IDs and title
+  // current watchlist array of movie IDs and title
   watchlist: WatchlistMovieData[];
 };
 
@@ -22,5 +22,7 @@ export interface IMoviesInterface extends MoviesState {
   dispatchFetchWatchlist: () => Promise<void>;
   dispatchAddToWatchlist: (userId: string, movieData: MovieDetailsData) => Promise<void>;
   dispatchClearCurrentMovie: () => void;
+  dispatchClearSearchResults: () => void;
   dispatchRemoveFromWatchlist: (userId: string, movieId: string) => Promise<void>;
+
 };

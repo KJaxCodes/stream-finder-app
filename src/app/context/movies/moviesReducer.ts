@@ -12,6 +12,9 @@ export const moviesReducer = (state: MoviesState, action: MoviesAction): MoviesS
     case "FETCH_MOVIE_DETAILS_SUCCESS": {
       return { ...state, ...action.payload };
     }
+    case "CLEAR_SEARCH_RESULTS": {
+      return { ...state, ...action.payload };
+    }
     // watchlist actions
     case "WATCHLIST_REQUEST": {
       return { ...state, ...action.payload };

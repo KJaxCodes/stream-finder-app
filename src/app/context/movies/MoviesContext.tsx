@@ -108,11 +108,13 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
     dispatch({ type: "CLEAR_CURRENT_MOVIE", payload: { currentMovie: null } });
   }, []);
 
-
-
+  // function to clear search results
+  const dispatchClearSearchResults = useCallback((): void => {
+    dispatch({ type: "CLEAR_SEARCH_RESULTS", payload: { searchResults: [], loading: false, error: null } });
+  }, []);
 
   return (
-    <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearCurrentMovie, dispatchFetchWatchlist, dispatchAddToWatchlist, dispatchRemoveFromWatchlist }}>
+    <MoviesContext.Provider value={{ ...state, dispatchSearch, dispatchFetchMovieDetails, dispatchClearSearchResults, dispatchClearCurrentMovie, dispatchFetchWatchlist, dispatchAddToWatchlist, dispatchRemoveFromWatchlist }}>
       {children}
     </MoviesContext.Provider>
   );
