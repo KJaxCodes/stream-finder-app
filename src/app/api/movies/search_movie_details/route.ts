@@ -4,11 +4,20 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 // types
 import type { MovieDetailsData, MovieDetailsResponse } from "@/app/types/shared/types";
+// auth helpers
+import { verifyServerAuth } from "../../helpers/authHelpers";
 
 
 
 export async function POST(request: Request) {
     try {
+        const userTokenData = await verifyServerAuth();
+        if (!userTokenData) {
+            return NextResponse.json<MovieDetailsResponse>(
+                { message: "Unauthorized", movieData: null },
+                { status: 401 }
+            );
+        }
         const reqBody = await request.json();
         const { movieId } = reqBody;
         console.log("Movie ID is: ", movieId);

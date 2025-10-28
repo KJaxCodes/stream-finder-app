@@ -20,7 +20,7 @@ export default async function Profile() {
             <main className={styles.main}>
                 <UsersNav />
                 <h1>Profile</h1>
-                <p>Review and edit your Watchlist here.</p>
+                <p>Review and edit your Watchlist here!</p>
                 <Row>
                     <Col>
                         <WatchlistComponent />
