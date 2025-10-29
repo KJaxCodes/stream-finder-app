@@ -6,10 +6,11 @@ import User from "../../src/models/userModel";
 import Movie from "../../src/models/movieModel";
 // Route imports
 import { GET as GETUserWatchlist } from "../../src/app/api/movies/watchlist/route";
-// helperes 
+import { POST as POSTSearchMovies } from "../../src/app/api/movies/search/route";
+// helpers 
 import { createMockMovie } from "../helpers/mockData";
 
-describe("User Watchlist API with Auth tests", () => {
+describe("User Movie API routes with Auth tests", () => {
     let mongoServer: MongoMemoryServer;
 
     beforeAll(async () => {

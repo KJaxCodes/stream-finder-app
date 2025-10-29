@@ -1,6 +1,7 @@
 //this route will handle a search request and call the watchmode api
 
 import axios from "axios";
+import { NextResponse, NextRequest } from "next/server";
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 
@@ -11,13 +12,13 @@ type MovieData = {
     type: string;
 };
 
-
+// POST /api/movies/search
 export async function POST(request: Request) {
     try {
         const userTokenData = await verifyServerAuth();
         if (!userTokenData) {
-            return new Response(
-                JSON.stringify({ message: "Unauthorized" }),
+            return new NextResponse(
+                JSON.stringify({ message: "Unauthorized", results: [] }),
                 { status: 401 }
             );
         }
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
         const apiKey = process.env.WATCHMODE_API_KEY; // Use server-side environment variable
 
         if (!apiKey) {
-            return new Response(
+            return new NextResponse(
                 JSON.stringify({ message: "API key not configured" }),
                 { status: 500 }
             );
@@ -43,12 +44,12 @@ export async function POST(request: Request) {
                 apiKey: apiKey,
                 search_field: "name",
                 search_value: query,
-   
+
             },
         });
 
         if (!searchRes.data || !searchRes.data.title_results || searchRes.data.title_results.length === 0) {
-            return new Response(JSON.stringify({ message: "No results found" }), {
+            return new NextResponse(JSON.stringify({ message: "No results found" }), {
                 status: 404,
             });
         }
@@ -65,10 +66,10 @@ export async function POST(request: Request) {
         console.log(movies);
         console.log("Number of movies found: ", movies.length);
 
-        return new Response(JSON.stringify(movies), { status: 200 });
+        return new NextResponse(JSON.stringify(movies), { status: 200 });
     } catch (error) {
         console.error("Error processing search request:", error);
-        return new Response(
+        return new NextResponse(
             JSON.stringify({ message: "Error processing request" }),
             { status: 500 }
         );

@@ -3,10 +3,9 @@ import { NextRequest } from "next/server";
 import * as authHelpers from "../../src/app/api/helpers/authHelpers";
 import { MongoMemoryServer } from "mongodb-memory-server";
 // Route imports
-import { GET as GETUserWatchlist } from "../../src/app/api/movies/watchlist/route";
 import { POST as POSTSearchMovies } from "../../src/app/api/movies/search/route";
 
-describe("User Movie watchlist route without Auth tests", () => {
+describe("User search API routes without Auth tests", () => {
     let mongoServer: MongoMemoryServer;
 
     beforeAll(async () => {
@@ -33,28 +32,24 @@ describe("User Movie watchlist route without Auth tests", () => {
         console.log("Cleaned up after watchlist no auth tests");
     });
 
-    it("Should not allow access to watchlist without authentication", async () => {
+
+    it("Should not allow access to search for movies without authentication", async () => {
         jest.spyOn(authHelpers, "verifyServerAuth").mockResolvedValueOnce(null);
 
-        const request = new NextRequest("http://localhost:3000/api/movies/watchlist", {
-            method: "GET",
+        const request = new NextRequest("http://localhost:3000/api/movies/search", {
+            method: "POST",
+            body: JSON.stringify({ query: "Halloween" }),
         });
 
-        const response = await GETUserWatchlist(request);
+        const response = await POSTSearchMovies(request);
         const data = await response.json();
 
         // this will expect a 401 Unauthorized response
         expect(response.status).toBe(401);
-        // the next 3 expects are for the structure of the response data
         expect(data).toHaveProperty("message");
-        expect(data).toHaveProperty("watchlist");
-        expect(data).toHaveProperty("errors");
-
-
-        expect(Array.isArray(data.watchlist)).toBe(true);
-        expect(data.watchlist.length).toBe(0);
-        expect(Array.isArray(data.errors)).toBe(true);
-        expect(data.errors.length).toBeGreaterThan(0);
+        expect(data).toHaveProperty("results");
+        expect(Array.isArray(data.results)).toBe(true);
+        expect(data.results.length).toBe(0);
     });
 
 });
