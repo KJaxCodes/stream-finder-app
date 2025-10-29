@@ -43,6 +43,10 @@ describe("placeholder for User search API routes with Auth tests", () => {
             console.log("Cleaned up after watchlist no auth tests");
         });
 
+        it("should run a test", () => {
+            expect(1 === 1);
+        });
+
         it("Should allow access to search for movies with authentication and return results", async () => {
             // setup mock data in the DB for the test
             // test user 

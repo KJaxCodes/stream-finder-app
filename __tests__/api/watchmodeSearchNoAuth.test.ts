@@ -4,6 +4,7 @@ import * as authHelpers from "../../src/app/api/helpers/authHelpers";
 import { MongoMemoryServer } from "mongodb-memory-server";
 // Route imports
 import { POST as POSTSearchMovies } from "../../src/app/api/movies/search/route";
+import { POST as POSTSearchMovieDetails } from "../../src/app/api/movies/search_movie_details/route";
 
 describe("User search API routes without Auth tests", () => {
     let mongoServer: MongoMemoryServer;
@@ -50,6 +51,23 @@ describe("User search API routes without Auth tests", () => {
         expect(data).toHaveProperty("results");
         expect(Array.isArray(data.results)).toBe(true);
         expect(data.results.length).toBe(0);
+    });
+
+    it("Should not allow access to search for movie details without authentication", async () => {
+        jest.spyOn(authHelpers, "verifyServerAuth").mockResolvedValueOnce(null);
+
+        const request = new NextRequest("http://localhost:3000/api/movies/search_movie_details", {
+            method: "POST",
+            body: JSON.stringify({ watchmodeId: 12345 }),
+        });
+
+        const response = await POSTSearchMovieDetails(request);
+        const data = await response.json();
+        // this will expect a 401 Unauthorized response
+        expect(response.status).toBe(401);
+        expect(data).toHaveProperty("message");
+        expect(data).toHaveProperty("movieData");
+        expect(data.movieData).toBeNull();
     });
 
 });
