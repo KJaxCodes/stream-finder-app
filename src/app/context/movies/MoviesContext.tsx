@@ -94,7 +94,6 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
       try {
         const response = await axios.get('/api/movies/watchlist');
         const { watchlist } = response.data as WatchlistResponse;
-        console.log("Fetched watchlist:", watchlist);
         dispatch({ type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
       } catch (error: any) {
         console.error("Error fetching watchlist:", error);

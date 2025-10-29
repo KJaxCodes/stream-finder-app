@@ -10,14 +10,13 @@ import User from "../../src/models/userModel";
 describe("User Model and /users API tests", () => {
     let mongoServer: MongoMemoryServer;
 
-    // do I need a mock/test jwt secret?
     beforeAll(async () => {
         console.log("Will run before tests");
         mongoServer = await MongoMemoryServer.create();
         const URI = mongoServer.getUri();
         console.log("Our temp test database URI: ", URI);
         process.env.MONGO_URI = URI;
-        process.env.JWT_SECRET = "testsecretkey";
+        // process.env.JWT_SECRET = "testsecretkey";
         await mongoose.connect(process.env.MONGO_URI);
         console.log("Test database running at: ", process.env.MONGO_URI);
     });
