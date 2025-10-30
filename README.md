@@ -1,36 +1,32 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🎬 STREAMFINDER
 
-First, run the development server:
+## 📌 Project Overview
+STREAMFINDER is a responsive full-stack web application designed to help users quickly find where a specific movie is available to stream. Users can search for movie titles and view streaming availability across platforms like Netflix, Hulu, Max, Peacock, Prime Video, Disney+, and more. Registered users can create a profile and save movies to a personal watchlist.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Tech Stack
+This project uses the **MERN stack** with a balanced focus on both front-end and back-end development:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **MongoDB**: Stores user data including profiles, favorites, and saved lists.
+- **Express & Node.js**: Handles server-side logic, API integration, and user authentication.
+- **React**: Powers the front-end interface for searching, filtering, and displaying results.
+- **Next.js**: Manages server-side rendering and API routes.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Third-party integration:
+- **Watchmode API**: Provides real-time data on movie titles and their streaming availability. [API Docs](https://api.watchmode.com/docs)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Project Goal
+STREAMFINDER aims to eliminate the frustration of manually checking multiple streaming platforms to find a specific movie. Whether you're winding down on a Friday night or planning a movie marathon, this app streamlines the search process by aggregating streaming data and helping users determine if they already subscribe to the service offering the movie.
 
-## Learn More
+## 👥 Target Users
+The application is designed for:
+- Movie lovers and frequent streamers
+- Users subscribed to multiple streaming services
+- Anyone who enjoys organizing and tracking their movie watchlist
 
-To learn more about Next.js, take a look at the following resources:
+## 🔄 User Flow
+```text
+Sign Up → Log In → Search Movies → Save/Delete Movies from Watchlist → View Watchlist in Profile
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
