@@ -32,7 +32,6 @@ describe("User Movie API routes with Auth tests", () => {
         await mongoose.connection.db?.dropDatabase();
         await mongoose.disconnect();
         await mongoServer.stop();
-        console.log("Cleaned up after watchlist no auth tests");
     });
 
     it("Should return a User watchlist if a user is authenticated", async () => {
@@ -57,6 +56,7 @@ describe("User Movie API routes with Auth tests", () => {
 
         // test response status
         expect(response.status).toBe(200);
+        
         // the next 3 expects are for the structure of the response data
         expect(data).toHaveProperty("message");
         expect(data).toHaveProperty("watchlist");

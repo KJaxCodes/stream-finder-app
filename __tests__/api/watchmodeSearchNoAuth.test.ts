@@ -14,7 +14,6 @@ describe("User search API routes without Auth tests", () => {
             mongoServer = await MongoMemoryServer.create();
             const URI = mongoServer.getUri();
             process.env.MONGO_URI = URI;
-            // process.env.JWT_SECRET = "testsecret";
             await mongoose.connect(process.env.MONGO_URI);
         } catch (error) {
             console.error("Error setting up test database from MongoMemoryServer:", error);
@@ -63,10 +62,15 @@ describe("User search API routes without Auth tests", () => {
 
         const response = await POSTSearchMovieDetails(request);
         const data = await response.json();
+
         // this will expect a 401 Unauthorized response
         expect(response.status).toBe(401);
+
+        // the next 2 expects are for the structure of the response data
         expect(data).toHaveProperty("message");
         expect(data).toHaveProperty("movieData");
+
+        // test data content
         expect(data.movieData).toBeNull();
     });
 

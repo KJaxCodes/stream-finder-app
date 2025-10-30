@@ -28,7 +28,8 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
       dispatch({ type: "WATCHMODE_API_REQUEST", payload: { loading: true, error: null } });
       try {
         const response = await axios.post('/api/movies/search', { query });
-        const movies: MovieResult[] = response.data;
+        console.log('Search API response:', response.data.movies);
+        const movies: MovieResult[] = response.data.movies;
         dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null } });
       } catch (error: any) {
         dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });

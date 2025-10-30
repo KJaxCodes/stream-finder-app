@@ -8,14 +8,12 @@ import { isEmail } from "validator";
 // Error handling for password length is managed in the signup logic
 // Redirect to login page after successful signup
 
-
+// POST /api/users/signup
 export async function POST(request: NextRequest) {
     try {
         await connect();
-        console.log("Run the signup route");
         const reqBody = await request.json();
         const { email, password } = reqBody;
-        console.log(reqBody);
 
         //Email validation
         if (!email) {
@@ -63,5 +61,4 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
-
 }

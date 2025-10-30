@@ -18,7 +18,6 @@ import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/
 
 
 // GET /api/movies/watchlist
-// TODO: Data Types for reqBody?
 export async function GET(request: NextRequest) {
     try {
         const userTokenData = await verifyServerAuth();
@@ -33,7 +32,6 @@ export async function GET(request: NextRequest) {
         await connect();
 
         const { id: userId } = userTokenData;
-        console.log("Line 36 route.ts Fetching watchlist for userId: ", userId);
         const user = await User.findById(userId);
 
         if (!user) {
@@ -43,8 +41,6 @@ export async function GET(request: NextRequest) {
 
             );
         }
-
-
 
         const watchlist = await Movie.find({ user: userId }) as IMovie[];
 
@@ -90,8 +86,7 @@ export async function POST(request: NextRequest) {
         if (!reqBody || !reqBody.userId || !reqBody.movieData) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Cannot add to watchlist", watchlist: [], errors: ["Missing data to add to watchlist"]
-            }, { status: 400 }
-            );
+            }, { status: 400 });
         }
 
         const { userId, movieData } = reqBody as { userId: string; movieData: MovieDetailsData };
@@ -105,12 +100,11 @@ export async function POST(request: NextRequest) {
         }
         // check if movie already in watchlist
         const existingMovie = await Movie.findOne({ user: userId, watchmodeId: movieData.id }) as IMovie | null;
-        console.log("Existing movie in watchlist: ", existingMovie);
+
         if (existingMovie) {
             return NextResponse.json<WatchlistResponse>({
                 message: "Movie already in watchlist", watchlist: [], errors: ["Duplicate movie"]
-            }, { status: 400 }
-            );
+            }, { status: 400 });
         }
 
         // create new movie document
@@ -127,15 +121,13 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json<WatchlistResponse>({
             message: "Movie added to watchlist", watchlist: updatedWatchlist, errors: null
-        }, { status: 201 }
-        );
+        }, { status: 201 });
 
     } catch (error: any) {
         console.error("Error in POST /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
             message: "Server error", watchlist: [], errors: [error.message || "Unknown POST /watchlist error"]
-        }, { status: 500 }
-        );
+        }, { status: 500 });
     }
 };
 
@@ -210,8 +202,7 @@ export async function DELETE(request: NextRequest) {
             message: "Movie deleted from watchlist",
             watchlist: watchlistData,
             errors: null
-        }, { status: 200 }
-        );
+        }, { status: 200 });
     }
     // CATCH block to handle errors
     catch (error: any) {
@@ -220,7 +211,6 @@ export async function DELETE(request: NextRequest) {
             message: "Server error",
             watchlist: [],
             errors: [error.message || "Unknown DELETE /watchlist error"]
-        }, { status: 500 }
-        );
+        }, { status: 500 });
     }
 };

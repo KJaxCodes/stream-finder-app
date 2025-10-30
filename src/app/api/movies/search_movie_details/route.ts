@@ -1,4 +1,5 @@
-//this route will handle a search request and call the watchmode api
+//this route will handle a search request and call the watchmode api to get movie details
+
 // NextResponse 
 import { NextResponse } from "next/server";
 import axios from "axios";
@@ -7,8 +8,7 @@ import type { MovieDetailsData, MovieDetailsResponse } from "@/app/types/shared/
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 
-
-
+// POST /api/movies/search_movie_details
 export async function POST(request: Request) {
     try {
         const userTokenData = await verifyServerAuth();
@@ -20,7 +20,6 @@ export async function POST(request: Request) {
         }
         const reqBody = await request.json();
         const { movieId } = reqBody;
-        console.log("Movie ID is: ", movieId);
 
         if (!movieId) {
             return NextResponse.json(
@@ -34,10 +33,11 @@ export async function POST(request: Request) {
         if (!apiKey) {
             return NextResponse.json(
                 { message: "API key not configured", movieData: null },
-                { status: 500 }
+                { status: 403 }
             );
         }
 
+        // Watchmode API endpoints
         const MOVIE_DETAILS_URL = `https://api.watchmode.com/v1/title/${movieId}/details/`;
         const CAST_CREW_URL = `https://api.watchmode.com/v1/title/${movieId}/cast-crew/`;
         const SOURCES_URL = `https://api.watchmode.com/v1/title/${movieId}/sources/`;
@@ -68,6 +68,7 @@ export async function POST(request: Request) {
             cast: [],
             streamingOn: [],
         };
+
         // Fetch cast and crew
         const castCrewResponse = await axios.get(CAST_CREW_URL, {
             params: { apiKey: apiKey },

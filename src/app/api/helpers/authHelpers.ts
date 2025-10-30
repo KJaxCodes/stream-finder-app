@@ -26,6 +26,7 @@ export const authenticateToken = (token: string | undefined): UserTokenData | nu
   }
 };
 
+// Function to protect routes that require authentication
 export const runProtectedRoute = async (): Promise<void> => {
   if (typeof window !== 'undefined') return;
 
@@ -35,6 +36,7 @@ export const runProtectedRoute = async (): Promise<void> => {
   if (!token || !authenticateToken(token)) return redirect('/login');
 };
 
+// Function to redirect authenticated users to authenticated homepage
 export const redirectIfAuthenticated = async (): Promise<void> => {
   if (typeof window !== 'undefined') return;
 

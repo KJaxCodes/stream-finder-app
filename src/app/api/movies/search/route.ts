@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
 
         const reqBody = await request.json();
         const { query } = reqBody;
-        console.log("Search query: ", query);
 
         const apiKey = process.env.WATCHMODE_API_KEY; // Use server-side environment variable
 
@@ -31,6 +30,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Watchmode API base URL
         const BASE_URL = "https://api.watchmode.com/v1";
 
         // Call the watchmode api to search for the movie
@@ -64,18 +64,13 @@ export async function POST(request: NextRequest) {
                 type: movie.type,
             }));
 
-        console.log(movies);
-        console.log("Number of movies found: ", movies.length);
-
         return NextResponse.json<MoviesSearchResponse>({
             message: `Search results for movie: ${query}`, movies: movies, errors: null
-        }, { status: 200 }
-        );
+        }, { status: 200 });
     } catch (error: any) {
         console.error("Error processing search request:", error);
         return NextResponse.json<MoviesSearchResponse>({
             message: "Server error", movies: [], errors: [error.message || "Unknown POST /api/search"]
-        }, { status: 500 }
-        );
+        }, { status: 500 });
     }
 }

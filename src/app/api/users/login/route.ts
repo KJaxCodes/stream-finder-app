@@ -16,7 +16,6 @@ import { connect } from "@/dbConfig/dbConfig";
 export async function POST(request: NextRequest) {
     try {
         await connect();
-        // console.log("Run the login route");
         const reqBody = await request.json();
         const { email, password } = reqBody;
 
@@ -25,7 +24,6 @@ export async function POST(request: NextRequest) {
         if (!user) {
             return NextResponse.json({ message: 'User not found' }, { status: 400 });
         }
-
 
         // Compare password
         const validPassword = await bcrypt.compare(password, user.password);
@@ -40,7 +38,7 @@ export async function POST(request: NextRequest) {
         };
 
         // create token
-        if (!process.env.JWT_SECRET) { 
+        if (!process.env.JWT_SECRET) {
             // write error to a file
             try {
                 console.error("JWT_SECRET is not defined in environment variables");
@@ -66,9 +64,7 @@ export async function POST(request: NextRequest) {
 
         return response;
 
-
     } catch (error: any) {
-        console.log("Error in login route:", error);
         return NextResponse.json({ message: error.message, user: null, success: false }, { status: 500 });
     }
 }

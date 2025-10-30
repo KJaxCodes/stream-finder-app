@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 
 // Logout route to clear the authentication token
+// DELETE /api/users/logout
 export async function DELETE() {
     try {
         const response: any = NextResponse.json(
             {
                 message: 'Logout successful',
                 success: true,
-            }
+            }, { status: 200 }
         )
         response.cookies.set("token", "",
             {

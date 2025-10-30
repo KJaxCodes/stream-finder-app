@@ -11,21 +11,16 @@ describe("User Model and /users API tests", () => {
     let mongoServer: MongoMemoryServer;
 
     beforeAll(async () => {
-        console.log("Will run before tests");
         mongoServer = await MongoMemoryServer.create();
         const URI = mongoServer.getUri();
-        console.log("Our temp test database URI: ", URI);
         process.env.MONGO_URI = URI;
-        // process.env.JWT_SECRET = "testsecretkey";
         await mongoose.connect(process.env.MONGO_URI);
-        console.log("Test database running at: ", process.env.MONGO_URI);
     });
 
     afterAll(async () => {
         await mongoose.connection.db?.dropDatabase();
         await mongoose.disconnect();
         await mongoServer.stop();
-        console.log("Cleaned up");
     })
 
     it("Should run a test", () => {
@@ -104,7 +99,6 @@ describe("User Model and /users API tests", () => {
         expect(data.message).toBe("User already exists");
 
         let users = await User.find({});
-        console.log("Users in DB after duplicate signup attempt:", users);
         expect(users.length).toBe(1); // One user should exist: the one from the previous test
     });
 
@@ -147,8 +141,10 @@ describe("User Model and /users API tests", () => {
                 password: "wrongpassword"
             })
         });
+
         const res = await POSTUserLogin(request);
         const data = await res.json();
+
         expect(res.status).toBe(400);
         expect(data.message).toBe("Invalid password");
     });

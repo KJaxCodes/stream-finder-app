@@ -14,7 +14,6 @@ describe("User Movie watchlist route without Auth tests", () => {
             mongoServer = await MongoMemoryServer.create();
             const URI = mongoServer.getUri();
             process.env.MONGO_URI = URI;
-            // process.env.JWT_SECRET = "testsecret";
             await mongoose.connect(process.env.MONGO_URI);
         } catch (error) {
             console.error("Error setting up test database from MongoMemoryServer:", error);
@@ -45,12 +44,13 @@ describe("User Movie watchlist route without Auth tests", () => {
 
         // this will expect a 401 Unauthorized response
         expect(response.status).toBe(401);
+
         // the next 3 expects are for the structure of the response data
         expect(data).toHaveProperty("message");
         expect(data).toHaveProperty("watchlist");
         expect(data).toHaveProperty("errors");
 
-
+        // test data content
         expect(Array.isArray(data.watchlist)).toBe(true);
         expect(data.watchlist.length).toBe(0);
         expect(Array.isArray(data.errors)).toBe(true);

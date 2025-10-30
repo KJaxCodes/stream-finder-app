@@ -1,3 +1,4 @@
+// mock data for testing purposes
 export const createMockMovie = (userId: string) => {
     return {
         user: userId,
