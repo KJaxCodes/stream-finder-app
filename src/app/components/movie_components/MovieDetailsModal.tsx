@@ -11,6 +11,7 @@ import { useAuthContext } from '@/app/context/AuthContext';
 import { useMoviesContext } from '@/app/context/movies/MoviesContext';
 // Types
 import type { WatchlistMovieData } from '@/app/types/shared/types';
+import { moviesReducer } from '@/app/context/movies/moviesReducer';
 
 interface IMovieDetailsModalProps {
     // Define any props you might need here
@@ -44,12 +45,15 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
 
     // Handler to remove movie from watchlist
     const handleRemoveFromWatchlist = () => {
+
+        console.log("Current movie ID:", currentMovie.id);
         if (user && user.id) {
             // find the movie in watchlist by matching watchmodeId
             const match = watchlist.find(movie => movie.watchmodeId === currentMovie.id);
             // if found, dispatch remove action with its objectId
+            console.log("Match found for removal:", match?.watchmodeId);
             if (match) {
-                dispatchRemoveFromWatchlist(user.id, match.objectId);
+                dispatchRemoveFromWatchlist(user.id, match.watchmodeId.toString());
             } else {
                 console.warn("Movie not found in watchlist for removal.");
             }

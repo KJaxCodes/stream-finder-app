@@ -36,8 +36,6 @@ const WatchlistComponent: React.FC = () => {
         if (user && user.id) {
             dispatchRemoveFromWatchlist(user.id, movieId);
         }
-        console.log("Remove from watchlist clicked for movieId:", movieId);
-        console.log("User info:", user);
     };
 
     return (

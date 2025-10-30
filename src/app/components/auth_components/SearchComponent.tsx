@@ -26,7 +26,6 @@ const SearchComponent: React.FC<{}> = () => {
         e.preventDefault();
         await dispatchSearch(query);
         setQuery('');
-        console.log('Search results:', searchResults);
     };
 
 
@@ -49,11 +48,7 @@ const SearchComponent: React.FC<{}> = () => {
                 <Button onClick={handleSearchButtonClick} variant="outline-success">Search</Button>
             </Form>
             <MovieDetailsModal />
-            {searchResults && searchResults.length > 0 ? (
-                searchResults.map(movie => <MovieResultCard key={movie.id} {...movie} />)
-            ) : (
-                <p className="mt-4 bg-warning p-3 rounded">No movies found. Try another search.</p>
-            )}
+            {searchResults && searchResults.map(movie => <MovieResultCard key={movie.id} {...movie} />)}
         </>
     );
 };
