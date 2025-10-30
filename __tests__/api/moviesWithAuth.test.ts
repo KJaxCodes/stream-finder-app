@@ -6,7 +6,6 @@ import User from "../../src/models/userModel";
 import Movie from "../../src/models/movieModel";
 // Route imports
 import { GET as GETUserWatchlist } from "../../src/app/api/movies/watchlist/route";
-import { POST as POSTSearchMovies } from "../../src/app/api/movies/search/route";
 // helpers 
 import { createMockMovie } from "../helpers/mockData";
 
@@ -18,7 +17,6 @@ describe("User Movie API routes with Auth tests", () => {
             mongoServer = await MongoMemoryServer.create();
             const URI = mongoServer.getUri();
             process.env.MONGO_URI = URI;
-            // process.env.JWT_SECRET = "testsecret";
             await mongoose.connect(process.env.MONGO_URI);
         } catch (error) {
             console.error("Error setting up test database from MongoMemoryServer:", error);
@@ -64,7 +62,7 @@ describe("User Movie API routes with Auth tests", () => {
         expect(data).toHaveProperty("watchlist");
         expect(data).toHaveProperty("errors");
 
-
+        // test data content
         expect(Array.isArray(data.watchlist)).toBe(true);
         expect(data.watchlist.length).toBe(2);
         expect(data.errors).toBeNull();

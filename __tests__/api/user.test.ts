@@ -151,6 +151,6 @@ describe("User Model and /users API tests", () => {
         const data = await res.json();
         expect(res.status).toBe(400);
         expect(data.message).toBe("Invalid password");
-    }); 
+    });
 
 });

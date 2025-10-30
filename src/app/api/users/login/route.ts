@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
             message: 'Login successful',
             user: tokenData,
             success: true,
-        })
+        }, { status: 200 });
 
         response.cookies.set('token', token, { httpOnly: true });
 

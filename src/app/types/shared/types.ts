@@ -29,6 +29,7 @@ export type MovieDetailsResponse = {
 };
 
 
+
 // watchlist movie data
 export type WatchlistMovieData = {
     // MongoDB ObjectId as string
@@ -42,6 +43,19 @@ export type WatchlistMovieData = {
     watchmodeId: number;
     // any additional fields specific to watchlist can be added here
 };
+
+// response type for movies routes (anything through Wathmode)
+export type MovieData = {
+    id: number;
+    title: string;
+    year: number;
+    type: string;
+};
+export type MoviesSearchResponse = {
+    message: string;
+    movies: MovieData[];
+    errors: string[] | null;
+}
 
 // response type for watchlist routes
 export type WatchlistResponse = {

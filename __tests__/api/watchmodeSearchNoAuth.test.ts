@@ -48,9 +48,9 @@ describe("User search API routes without Auth tests", () => {
         // this will expect a 401 Unauthorized response
         expect(response.status).toBe(401);
         expect(data).toHaveProperty("message");
-        expect(data).toHaveProperty("results");
-        expect(Array.isArray(data.results)).toBe(true);
-        expect(data.results.length).toBe(0);
+        expect(data).toHaveProperty("movies");
+        expect(Array.isArray(data.movies)).toBe(true);
+        expect(data.movies.length).toBe(0);
     });
 
     it("Should not allow access to search for movie details without authentication", async () => {
