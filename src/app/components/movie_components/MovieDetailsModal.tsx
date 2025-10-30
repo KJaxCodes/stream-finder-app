@@ -45,15 +45,12 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
 
     // Handler to remove movie from watchlist
     const handleRemoveFromWatchlist = () => {
-
-        console.log("Current movie ID:", currentMovie.id);
         if (user && user.id) {
             // find the movie in watchlist by matching watchmodeId
             const match = watchlist.find(movie => movie.watchmodeId === currentMovie.id);
             // if found, dispatch remove action with its objectId
-            console.log("Match found for removal:", match?.watchmodeId);
             if (match) {
-                dispatchRemoveFromWatchlist(user.id, match.watchmodeId.toString());
+                dispatchRemoveFromWatchlist(user.id, match.objectId);
             } else {
                 console.warn("Movie not found in watchlist for removal.");
             }
