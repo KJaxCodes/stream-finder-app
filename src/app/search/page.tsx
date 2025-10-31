@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 // React imports
-import React, {useEffect} from "react";
+import React from "react";
 // React bootstrap imports
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
