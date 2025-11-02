@@ -4,11 +4,8 @@ import * as authHelpers from "../../src/app/api/helpers/authHelpers";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import axios from "axios";
 import User from "../../src/models/userModel";
-import Movie from "../../src/models/movieModel";
 // Route imports
 import { POST as POSTSearchWatchmodeMovies } from "../../src/app/api/movies/search/route";
-// helpers
-import { createMockMovie } from "../helpers/mockData";
 
 const mockWatchmodeResponse = {
     data: {

@@ -25,7 +25,7 @@ const LoginComponent: React.FC<{}> = () => {
     //local form state
     const [formState, setFormState] = React.useState<FormState>({ email: "", password: "", emailError: null, passwordError: null, errors: null });
     // global auth context
-    const { dispatchLogin, loading, error, user } = useAuthContext();
+    const { dispatchLogin, error } = useAuthContext();
 
     // Function to handle login
     const handleLoginButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {

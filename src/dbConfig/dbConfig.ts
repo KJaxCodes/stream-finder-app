@@ -14,7 +14,7 @@ declare global {
 }
 
 
-let cachedConnectionObject: CachedConnectionObject = global.mongooseCache ?? { connection: null, connectionPromise: null };
+const cachedConnectionObject: CachedConnectionObject = global.mongooseCache ?? { connection: null, connectionPromise: null };
 
 export async function connect(): Promise<Mongoose> {
 

@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import axios from 'axios';
 // Bootstrap components
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';

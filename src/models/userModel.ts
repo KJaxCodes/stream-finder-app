@@ -1,5 +1,4 @@
 import { Schema, Document, model, models, Model } from "mongoose";
-import { isReactCompilerRequired } from "next/dist/build/swc/generated-native";
 //validator package to validate email
 import { isEmail } from "validator";
 

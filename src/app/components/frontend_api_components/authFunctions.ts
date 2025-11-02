@@ -1,6 +1,5 @@
 import axios from "axios";
 //
-import type { IUser } from "@/models/userModel";
 import type { AxiosResponse } from "node_modules/axios/index.cjs";
 
 export const handleSignup = async (email: string, password: string): Promise<boolean> => {

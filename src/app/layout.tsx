@@ -40,7 +40,7 @@ export default async function RootLayout({
   // check for a login cookie and hydrate the auth context if it exists
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-  let initialUser: UserTokenData | null = authenticateToken(token);
+  const initialUser: UserTokenData | null = authenticateToken(token);
 
   return (
     <html lang="en">

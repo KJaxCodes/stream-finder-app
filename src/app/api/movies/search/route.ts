@@ -5,7 +5,7 @@ import { NextResponse, NextRequest } from "next/server";
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 // types imports
-import type { MoviesSearchResponse, MovieDetailsResponse, MovieData } from "@/app/types/shared/types";
+import type { MoviesSearchResponse, MovieData } from "@/app/types/shared/types";
 
 // POST /api/movies/search
 export async function POST(request: NextRequest) {

@@ -11,7 +11,6 @@ import { useAuthContext } from '@/app/context/AuthContext';
 import { useMoviesContext } from '@/app/context/movies/MoviesContext';
 // Types
 import type { WatchlistMovieData } from '@/app/types/shared/types';
-import { moviesReducer } from '@/app/context/movies/moviesReducer';
 
 interface IMovieDetailsModalProps {
     // Define any props you might need here

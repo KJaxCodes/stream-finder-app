@@ -1,6 +1,6 @@
 "use client";
 // Component to search movie titles, display results, and allow users to add movies to their watchlist
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // Movies context
 import { useMoviesContext } from '../../context/movies/MoviesContext';
 // Bootstrap components

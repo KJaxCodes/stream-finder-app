@@ -10,7 +10,6 @@ import Movie from "@/models/movieModel";
 import { connect } from "@/dbConfig/dbConfig";
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
-import { cookies } from "next/headers";
 // types imports
 import type { IUser } from "@/models/userModel";
 import type { IMovie } from "@/models/movieModel";

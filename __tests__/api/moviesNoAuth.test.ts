@@ -4,7 +4,6 @@ import * as authHelpers from "../../src/app/api/helpers/authHelpers";
 import { MongoMemoryServer } from "mongodb-memory-server";
 // Route imports
 import { GET as GETUserWatchlist } from "../../src/app/api/movies/watchlist/route";
-import { POST as POSTSearchMovies } from "../../src/app/api/movies/search/route";
 
 describe("User Movie watchlist route without Auth tests", () => {
     let mongoServer: MongoMemoryServer;

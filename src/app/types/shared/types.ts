@@ -51,6 +51,7 @@ export type MovieData = {
     year: number;
     type: string;
 };
+
 export type MoviesSearchResponse = {
     message: string;
     movies: MovieData[];

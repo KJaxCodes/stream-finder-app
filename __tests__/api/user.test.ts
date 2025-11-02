@@ -42,7 +42,6 @@ describe("User Model and /users API tests", () => {
         expect(users.length).toBe(0);
 
         const res = await POSTUserSignup(request);
-        const data = await res.json();
 
         // check that user is created in the database
         users = await User.find({});
@@ -98,7 +97,7 @@ describe("User Model and /users API tests", () => {
         const data = await res.json();
         expect(data.message).toBe("User already exists");
 
-        let users = await User.find({});
+        const users = await User.find({});
         expect(users.length).toBe(1); // One user should exist: the one from the previous test
     });
 
@@ -112,7 +111,6 @@ describe("User Model and /users API tests", () => {
             })
         });
         const res = await POSTUserLogin(request);
-        const data = await res.json();
         expect(res.status).toBe(200);
 
     });
