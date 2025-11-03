@@ -7,6 +7,8 @@ import { moviesReducer } from "./moviesReducer";
 // types
 import type { MovieDetailsData, MovieDetailsResponse, WatchlistResponse } from "@/app/types/shared/types";
 import type { IMoviesInterface, MovieResult, MoviesState } from "./types";
+// helpers
+import { handleMoviesErrorDispatch } from "./helpers/errorHelpers";
 
 const initialState: MoviesState = {
   searchResults: [],
@@ -31,8 +33,8 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
         console.log('Search API response:', response.data.movies);
         const movies: MovieResult[] = response.data.movies;
         dispatch({ type: "SEARCH_SUCCESS", payload: { searchResults: movies, loading: false, error: null } });
-      } catch (error: any) {
-        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      } catch (error: unknown) {
+        handleMoviesErrorDispatch(error, dispatch);
       }
     }, []
   );
@@ -51,9 +53,8 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
         }
 
         dispatch({ type: "FETCH_MOVIE_DETAILS_SUCCESS", payload: { currentMovie: movieData, loading: false, error: null } });
-
-      } catch (error: any) {
-        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      } catch (error: unknown) {
+        handleMoviesErrorDispatch(error, dispatch);
       }
     }, []
   );
@@ -66,9 +67,8 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
         const response = await axios.post("/api/movies/watchlist", { userId, movieData });
         const { watchlist } = response.data as WatchlistResponse;
         dispatch({ type: "ADD_TO_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
-      } catch (error: any) {
-        console.error(error);
-        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      } catch (error: unknown) {
+        handleMoviesErrorDispatch(error, dispatch);
       }
     }, []
   );
@@ -81,9 +81,8 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
         const response = await axios.delete("/api/movies/watchlist", { data: { userId, movieId } });
         const { watchlist } = response.data as WatchlistResponse;
         dispatch({ type: "REMOVE_FROM_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
-      } catch (error: any) {
-        console.error(error);
-        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      } catch (error: unknown) {
+        handleMoviesErrorDispatch(error, dispatch);
       }
     }, []
   );
@@ -96,9 +95,8 @@ const MoviesProvider = ({ children }: { children: ReactNode; }) => {
         const response = await axios.get('/api/movies/watchlist');
         const { watchlist } = response.data as WatchlistResponse;
         dispatch({ type: "FETCH_WATCHLIST_SUCCESS", payload: { watchlist, loading: false, error: null } });
-      } catch (error: any) {
-        console.error("Error fetching watchlist:", error);
-        dispatch({ type: "MOVIES_ERROR", payload: { loading: false, error: error.message } });
+      } catch (error: unknown) {
+        handleMoviesErrorDispatch(error, dispatch);
       }
     }, []
   );
