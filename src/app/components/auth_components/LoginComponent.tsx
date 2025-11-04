@@ -56,7 +56,7 @@ const LoginComponent: React.FC<{}> = () => {
 
         let emailError = formState.emailError;
         let passwordError = formState.passwordError;
-        let errors = formState.errors
+        const errors = formState.errors;
 
         // regex later for email validation
         if (name === "email") {

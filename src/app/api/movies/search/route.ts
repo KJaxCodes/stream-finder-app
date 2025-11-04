@@ -53,6 +53,8 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // todo type properly
+
         const results = searchRes.data.title_results;
         // filter AND extract only id, title, year, type
         const movies: MovieData[] = results
@@ -67,10 +69,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json<MoviesSearchResponse>({
             message: `Search results for movie: ${query}`, movies: movies, errors: null
         }, { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error processing search request:", error);
         return NextResponse.json<MoviesSearchResponse>({
-            message: "Server error", movies: [], errors: [error.message || "Unknown POST /api/search"]
+            message: "Server error", movies: [], errors: [error instanceof Error ? error.message : "Unknown POST /api/search"]
         }, { status: 500 });
     }
 }

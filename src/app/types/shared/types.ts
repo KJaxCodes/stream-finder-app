@@ -64,3 +64,15 @@ export type WatchlistResponse = {
     watchlist: WatchlistMovieData[];
     errors: string[] | null;
 };
+
+// Watchmode API response types
+// person/crew member data (e.g., from cast/crew API)
+export type WatchmodeCastCrewData = {
+    person_id: number;
+    type: string;
+    full_name: string;
+    headshot_url: string;
+    role: string;
+    episode_count: number;
+    order: number;
+};

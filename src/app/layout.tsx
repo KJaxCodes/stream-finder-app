@@ -3,10 +3,10 @@ import { cookies } from 'next/headers';
 import { authenticateToken } from './api/helpers/authHelpers';
 import { Geist, Geist_Mono } from "next/font/google";
 // global css
-// @ts-ignore
+
 import "./globals.css";
 // Bootstrap CSS minified file
-// @ts-ignore
+
 import "bootstrap/dist/css/bootstrap.min.css";
 // Context imports 
 import AuthProvider from "./context/AuthContext";
@@ -14,7 +14,6 @@ import AuthProvider from "./context/AuthContext";
 import type { Metadata } from "next";
 import { UserTokenData } from './types/shared/types';
 import LoadingComponent from './components/ui_helpers/loading_component';
-// Movies Context
 import MoviesProvider from './context/movies/MoviesContext';
 
 const geistSans = Geist({

@@ -6,60 +6,44 @@ import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 // AuthContext
-import { useAuthContext } from '@/app/context/AuthContext';
+import { useAuthContext } from "../../context/AuthContext";
 // MoviesContext  
-import { useMoviesContext } from '@/app/context/movies/MoviesContext';
-// Types
+import { useMoviesContext } from "../../context/movies/MoviesContext";
+// types
 import type { WatchlistMovieData } from '@/app/types/shared/types';
 
-interface IMovieDetailsModalProps {
-    // Define any props you might need here
-};
+// for now no props
+
 
 // function to check if currentMovie is in watchlist
 const isInWatchlist = (watchlist: WatchlistMovieData[], watchmodeMovieId: number): boolean => {
     return watchlist.some(movie => movie.watchmodeId === watchmodeMovieId);
 }
 
-const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
+const MovieDetailsModal: React.FC = () => {
     // grab movie details from context or props as needed
-    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, dispatchRemoveFromWatchlist, watchlist } = useMoviesContext();
+    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, watchlist } = useMoviesContext();
     const { user } = useAuthContext();
 
-    // If no current movie is selected or user is not logged in, don't render the modal
     if (!currentMovie || !user) {
-        return null;
+        return null; // don't render the modal if no movie is selected
     }
 
-    // Destructure movie details
     const {
         title, summary, runtime, year, imdbRating, genres, rating, posterURL, director, cast, streamingOn
     } = currentMovie;
 
-    // Handler to add movie to watchlist, pass userId and currentMovie
+
     const handleAddToWatchlist = async () => {
         const { id: userId } = user;
         await dispatchAddToWatchlist(userId, currentMovie);
     };
 
-    // Handler to remove movie from watchlist
-    const handleRemoveFromWatchlist = () => {
-        if (user && user.id) {
-            // find the movie in watchlist by matching watchmodeId
-            const match = watchlist.find(movie => movie.watchmodeId === currentMovie.id);
-            // if found, dispatch remove action with its objectId
-            if (match) {
-                dispatchRemoveFromWatchlist(user.id, match.objectId);
-            } else {
-                console.warn("Movie not found in watchlist for removal.");
-            }
-        }
-    };
-
-    // Handler to close modal
     const handleModalClose = () => {
         dispatchClearCurrentMovie();
     };
+
+    //console.log("Rendering MovieDetailsModal for movie:", currentMovie);
 
     return (
         <>
@@ -96,7 +80,7 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
                 <Modal.Footer>
                     {
                         isInWatchlist(watchlist, currentMovie.id) ?
-                            <Button variant="danger" onClick={handleRemoveFromWatchlist}>
+                            <Button variant="danger">
                                 Remove from Watchlist
                             </Button>
                             :
@@ -107,6 +91,7 @@ const MovieDetailsModal: React.FC<IMovieDetailsModalProps> = ({ }) => {
                     <Button variant="secondary" onClick={handleModalClose}>
                         Close
                     </Button>
+
                 </Modal.Footer>
             </Modal>
         </>

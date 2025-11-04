@@ -17,7 +17,7 @@ import type { MovieDetailsData, WatchlistMovieData, WatchlistResponse } from "@/
 
 
 // GET /api/movies/watchlist
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         const userTokenData = await verifyServerAuth();
         console.log("User token data in GET /movies/watchlist: ", userTokenData);

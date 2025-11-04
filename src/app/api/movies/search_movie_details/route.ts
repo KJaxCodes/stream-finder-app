@@ -4,7 +4,7 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 // types
-import type { MovieDetailsData, MovieDetailsResponse } from "@/app/types/shared/types";
+import type { MovieDetailsData, MovieDetailsResponse, WatchmodeCastCrewData } from "@/app/types/shared/types";
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 
@@ -80,15 +80,14 @@ export async function POST(request: Request) {
         }
 
         // grab actors only
-        const actors = castCrewResponse.data.filter((castData: any) => castData.type === "Cast").map((actorData: any) => actorData.full_name).slice(0, 10);
+        const actors = castCrewResponse.data.filter((castData: WatchmodeCastCrewData) => castData.type === "Cast").map((actorData: WatchmodeCastCrewData) => actorData.full_name).slice(0, 10);
 
         const directors = castCrewResponse.data
-            .filter((crewData: any) => {
+            .filter((crewData: WatchmodeCastCrewData) => {
                 const firstRole = crewData.role.split(",")[0].trim().toLowerCase();
                 return firstRole === "director";
             })
-            .map((directorData: any) => directorData.full_name);
-
+            .map((directorData: WatchmodeCastCrewData) => directorData.full_name);
         detailsData.cast = actors;
         detailsData.director = directors;
 

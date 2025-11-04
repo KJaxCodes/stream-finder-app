@@ -11,8 +11,8 @@ const LoadingComponent: React.FC = () => {
     const { loading: authLoading } = useAuthContext();
     const { loading: moviesLoading } = useMoviesContext();
 
-    console.log("Auth loading:", authLoading);
-    console.log("Movies loading:", moviesLoading);
+    // console.log("Auth loading:", authLoading);
+    // console.log("Movies loading:", moviesLoading);
 
     if (authLoading) {
         return (

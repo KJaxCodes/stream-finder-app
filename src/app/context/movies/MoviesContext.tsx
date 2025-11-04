@@ -10,6 +10,7 @@ import type { IMoviesInterface, MovieResult, MoviesState } from "./types";
 // helpers
 import { handleMoviesErrorDispatch } from "./helpers/errorHelpers";
 
+
 const initialState: MoviesState = {
   searchResults: [],
   currentMovie: null,
