@@ -27,7 +27,7 @@ type AuthResponse = {
 
 export const handleLogin = async (email: string, password: string): Promise<AuthResponse> => {
     try {
-        const response = await axios.post<{}, AxiosResponse<AuthResponse>>("/api/users/login", { email, password });
+        const response = await axios.post<unknown, AxiosResponse<AuthResponse>>("/api/users/login", { email, password });
         const { user, success, message } = response.data;
 
         // login failed, send the data to process by React.Context
@@ -45,7 +45,7 @@ export const handleLogin = async (email: string, password: string): Promise<Auth
 
 export const handleLogout = async (): Promise<AuthResponse> => {
     try {
-        const response = await axios.delete<{}, AxiosResponse<AuthResponse>>("api/users/logout");
+        const response = await axios.delete<unknown, AxiosResponse<AuthResponse>>("api/users/logout");
         const { success, message } = response.data;
 
         if (!success) {
@@ -53,7 +53,7 @@ export const handleLogout = async (): Promise<AuthResponse> => {
         }
 
         return { success: true, user: null, message }
-    } catch (error) {
+    } catch {
         return { success: false, message: "Logout error" };
     }
 };

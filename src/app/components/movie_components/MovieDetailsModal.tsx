@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image'
 /// Bootstrap components
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -22,7 +23,7 @@ const isInWatchlist = (watchlist: WatchlistMovieData[], watchmodeMovieId: number
 
 const MovieDetailsModal: React.FC = () => {
     // grab movie details from context or props as needed
-    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, watchlist } = useMoviesContext();
+    const { currentMovie, dispatchAddToWatchlist, dispatchClearCurrentMovie, dispatchRemoveFromWatchlist, watchlist } = useMoviesContext();
     const { user } = useAuthContext();
 
     if (!currentMovie || !user) {
@@ -39,9 +40,16 @@ const MovieDetailsModal: React.FC = () => {
         await dispatchAddToWatchlist(userId, currentMovie);
     };
 
+    const handleRemoveFromWatchlist = async () => {
+        const { id: userId } = user;
+        await dispatchRemoveFromWatchlist(userId, String(currentMovie.id));
+    };
+
+
     const handleModalClose = () => {
         dispatchClearCurrentMovie();
     };
+
 
     //console.log("Rendering MovieDetailsModal for movie:", currentMovie);
 
@@ -70,7 +78,7 @@ const MovieDetailsModal: React.FC = () => {
                                 </ul>
                             </Col>
                             <Col xs={12} md={6}>
-                                <img src={posterURL} alt={`${title} poster`} className="img-fluid mb-3" />
+                                <Image src={posterURL} alt={`${title} poster`} className="img-fluid mb-3" width={300} height={450} />
                             </Col>
                         </Row>
                     </Container>
@@ -80,7 +88,7 @@ const MovieDetailsModal: React.FC = () => {
                 <Modal.Footer>
                     {
                         isInWatchlist(watchlist, currentMovie.id) ?
-                            <Button variant="danger">
+                            <Button variant="danger" onClick={handleRemoveFromWatchlist}>
                                 Remove from Watchlist
                             </Button>
                             :

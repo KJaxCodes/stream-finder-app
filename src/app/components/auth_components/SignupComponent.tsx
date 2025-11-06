@@ -19,7 +19,7 @@ type FormState = {
     errors: string[] | null;
 }
 
-const SignupComponent: React.FC<{}> = () => {
+const SignupComponent: React.FC = () => {
     // Next router
     const router = useRouter();
     //local form state
@@ -28,7 +28,7 @@ const SignupComponent: React.FC<{}> = () => {
     const { dispatchSignup, error } = useAuthContext();
 
     // Function to handle signup
-    const handleSignupButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSignupButtonClick = async () => {
         const { email, password, errors } = formState;
 
         // handle client validation errors

@@ -22,7 +22,10 @@ export function middleware(request: NextRequest) {
             // Valid token, proceed to the next middleware or route handler
             console.log("Token found, verifying...");
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
-            return NextResponse.next();
+            if (decodedToken) {
+                return NextResponse.next();
+            }
+
         } catch (error: unknown) {
             // Invalid token, redirect to login
             console.log("Authentication error:", error instanceof Error ? error.message : "Unknown authentication error");

@@ -28,7 +28,7 @@ const LoginComponent: React.FC = () => {
     const { dispatchLogin, error } = useAuthContext();
 
     // Function to handle login
-    const handleLoginButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleLoginButtonClick = async () => {
         const { email, password, errors } = formState;
 
         // handle client validation errors

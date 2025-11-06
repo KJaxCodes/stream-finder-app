@@ -14,7 +14,7 @@ import MovieResultCard from '@/app/components/movie_components/MovieResultCard';
 
 
 // Search component for finding movies
-const SearchComponent: React.FC<{}> = () => {
+const SearchComponent: React.FC = () => {
 
     // local state for search query
     const [query, setQuery] = useState('');
