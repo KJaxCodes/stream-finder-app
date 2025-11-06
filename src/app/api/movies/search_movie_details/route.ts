@@ -4,7 +4,7 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 // types
-import type { MovieDetailsData, MovieDetailsResponse, WatchmodeCastCrewData } from "@/app/types/shared/types";
+import type { MovieDetailsData, MovieDetailsResponse, WatchmodeCastCrewData, WatchmodeStreamingSource } from "@/app/types/shared/types";
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
             detailsData.streamingOn = ["Not Available"];
         }
 
-        detailsData.streamingOn = [... new Set<string>(sourcesResponse.data.map((source: any) => source.name))];
+        detailsData.streamingOn = [... new Set<string>(sourcesResponse.data.map((source: WatchmodeStreamingSource) => source.name))];
 
         return NextResponse.json<MovieDetailsResponse>({ message: "Success", movieData: detailsData }, { status: 200 });
     } catch (error) {

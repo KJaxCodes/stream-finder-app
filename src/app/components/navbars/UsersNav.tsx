@@ -13,7 +13,7 @@ import styles from "../../page.module.css";
 
 // UsersNav component
 
-const UsersNav: React.FC<{}> = () => {
+const UsersNav: React.FC = () => {
     const { user, dispatchLogout } = useAuthContext();
     const { dispatchFetchWatchlist } = useMoviesContext();
     const router = useRouter();
@@ -32,7 +32,7 @@ const UsersNav: React.FC<{}> = () => {
     useEffect(() => {
         if (user) {
             console.log("From UsersNav, Fetching watchlist for user:", user.email);
-            dispatchFetchWatchlist(user.id);
+            dispatchFetchWatchlist();
         }
     }, [user, dispatchFetchWatchlist]);
 

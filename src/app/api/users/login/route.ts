@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
         return response;
 
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message, user: null, success: false }, { status: 500 });
+    } catch (error: unknown) {
+        return NextResponse.json({ message: error instanceof Error ? error.message : "Unknown login error", user: null, success: false }, { status: 500 });
     }
 }

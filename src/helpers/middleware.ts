@@ -23,9 +23,9 @@ export function middleware(request: NextRequest) {
             console.log("Token found, verifying...");
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
             return NextResponse.next();
-        } catch (error: any) {
+        } catch (error: unknown) {
             // Invalid token, redirect to login
-            console.log("Authentication error:", error.message);
+            console.log("Authentication error:", error instanceof Error ? error.message : "Unknown authentication error");
             return NextResponse.redirect(new URL('/login', request.url));
         }
     } else {

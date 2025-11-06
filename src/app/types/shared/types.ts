@@ -44,6 +44,22 @@ export type WatchlistMovieData = {
     // any additional fields specific to watchlist can be added here
 };
 
+// Watchmode API response types
+export type WatchmodeTitleResult = {
+  resultType: "title";
+  id: number;
+  name: string;
+  type: string;
+  year: number;
+  imdb_id: string;
+  tmdb_id: number;
+  tmdb_type: string;
+};
+
+export type WatchmodeSearchResponse = {
+  title_results: WatchmodeTitleResult[];
+};
+
 // response type for movies routes (anything through Wathmode)
 export type MovieData = {
     id: number;
@@ -75,4 +91,19 @@ export type WatchmodeCastCrewData = {
     role: string;
     episode_count: number;
     order: number;
+};
+
+// streaming source data from Watchmode API
+export type WatchmodeStreamingSource = {
+  source_id: number;
+  name: string;
+  type: string;
+  region: string;
+  ios_url: string;
+  android_url: string;
+  web_url: string;
+  format: string;
+  price: number | null;
+  seasons: number;
+  episodes: number;
 };

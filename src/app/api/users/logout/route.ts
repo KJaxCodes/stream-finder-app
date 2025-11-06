@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 // DELETE /api/users/logout
 export async function DELETE() {
     try {
-        const response: any = NextResponse.json(
+        const response = NextResponse.json(
             {
                 message: 'Logout successful',
                 success: true,
@@ -17,7 +17,13 @@ export async function DELETE() {
                 maxAge: 0
             });
         return response;
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error("Error in DELETE /api/users/logout:", error.message);
+            return NextResponse.json({ message: 'Logout failed', success: false }, { status: 500 });
+        } else {
+            console.error("Unknown error in DELETE /api/users/logout");
+            return NextResponse.json({ message: 'Logout failed, major error', success: false }, { status: 500 });
+        }
     }
 };

@@ -57,10 +57,10 @@ export async function GET() {
             message: "Watchlist fetched successfully", watchlist: watchlistData, errors: null
         }, { status: 200 }
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error in GET /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
-            message: "Server error", watchlist: [], errors: [error.message || "Unknown GET /watchlist error"]
+            message: "Server error", watchlist: [], errors: [error instanceof Error ? error.message : "Unknown GET /watchlist error"]
         }, { status: 500 }
         );
     }
@@ -122,10 +122,10 @@ export async function POST(request: NextRequest) {
             message: "Movie added to watchlist", watchlist: updatedWatchlist, errors: null
         }, { status: 201 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error in POST /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
-            message: "Server error", watchlist: [], errors: [error.message || "Unknown POST /watchlist error"]
+            message: "Server error", watchlist: [], errors: [error instanceof Error ? error.message : "Unknown POST /watchlist error"]
         }, { status: 500 });
     }
 };
@@ -204,12 +204,12 @@ export async function DELETE(request: NextRequest) {
         }, { status: 200 });
     }
     // CATCH block to handle errors
-    catch (error: any) {
+    catch (error: unknown) {
         console.error("Error in DELETE /api/movies/watchlist:", error);
         return NextResponse.json<WatchlistResponse>({
             message: "Server error",
             watchlist: [],
-            errors: [error.message || "Unknown DELETE /watchlist error"]
+            errors: [error instanceof Error ? error.message : "Unknown DELETE /watchlist error"]
         }, { status: 500 });
     }
 };

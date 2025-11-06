@@ -5,7 +5,7 @@ import { NextResponse, NextRequest } from "next/server";
 // auth helpers
 import { verifyServerAuth } from "../../helpers/authHelpers";
 // types imports
-import type { MoviesSearchResponse, MovieData } from "@/app/types/shared/types";
+import type { MoviesSearchResponse, MovieData, WatchmodeTitleResult, WatchmodeSearchResponse } from "@/app/types/shared/types";
 
 // POST /api/movies/search
 export async function POST(request: NextRequest) {
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         const BASE_URL = "https://api.watchmode.com/v1";
 
         // Call the watchmode api to search for the movie
-        const searchRes = await axios.get(`${BASE_URL}/search/`, {
+        const searchRes = await axios.get<WatchmodeSearchResponse>(`${BASE_URL}/search/`, {
             params: {
                 apiKey: apiKey,
                 search_field: "name",
@@ -55,11 +55,11 @@ export async function POST(request: NextRequest) {
 
         // todo type properly
 
-        const results = searchRes.data.title_results;
+        const results: WatchmodeTitleResult[] = searchRes.data.title_results;
         // filter AND extract only id, title, year, type
         const movies: MovieData[] = results
-            .filter((movie: any) => movie.tmdb_type === "movie")
-            .map((movie: any) => ({
+            .filter((movie) => movie.tmdb_type === "movie")
+            .map((movie) => ({
                 id: movie.id,
                 title: movie.name,
                 year: movie.year,

@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         },
             { status: 201 });
 
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        return NextResponse.json({ message: error instanceof Error ? error.message : "Unknown signup error" }, { status: 500 });
     }
 }

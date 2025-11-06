@@ -19,7 +19,7 @@ type FormState = {
     errors: string[] | null;
 }
 
-const LoginComponent: React.FC<{}> = () => {
+const LoginComponent: React.FC = () => {
     // Next router
     const router = useRouter();
     //local form state
@@ -126,7 +126,7 @@ const LoginComponent: React.FC<{}> = () => {
                 Login
             </Button>
             <br />
-            <Link href="/signup">Don't have an account? Visit Signup Page</Link>
+            <Link href="/signup">Don&apos;t have an account? Visit Signup Page</Link>
         </Form>
     );
 };
