@@ -28,7 +28,7 @@ const mockWatchmodeResponse = {
     },
 };
 
-describe("placeholder for User search API routes with Auth tests", () => {
+describe("User search API routes with Auth tests", () => {
     let mongoServer: MongoMemoryServer;
 
     beforeAll(async () => {

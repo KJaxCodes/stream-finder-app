@@ -40,10 +40,10 @@ const MovieDetailsModal: React.FC = () => {
         await dispatchAddToWatchlist(userId, currentMovie);
     };
 
-    const handleRemoveFromWatchlist = async () => {
-        const { id: userId } = user;
-        await dispatchRemoveFromWatchlist(userId, String(currentMovie.id));
-    };
+    // const handleRemoveFromWatchlist = async () => {
+    //     const { id: userId } = user;
+    //     await dispatchRemoveFromWatchlist(userId, String(currentMovie.id));
+    // };
 
 
     const handleModalClose = () => {
@@ -88,8 +88,8 @@ const MovieDetailsModal: React.FC = () => {
                 <Modal.Footer>
                     {
                         isInWatchlist(watchlist, currentMovie.id) ?
-                            <Button variant="danger" onClick={handleRemoveFromWatchlist}>
-                                Remove from Watchlist
+                            <Button variant="danger">
+                                Already in Watchlist
                             </Button>
                             :
                             <Button variant="primary" onClick={handleAddToWatchlist}>
