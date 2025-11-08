@@ -13,8 +13,9 @@ This project uses the **MERN stack** with a balanced focus on both front-end and
 - **React**: Powers the front-end interface for searching, displaying results, and viewing and editing the user watchlist.
 - **Next.js**: Manages server-side rendering and API routes.
 
-Third-party integration:
-- **Watchmode API**: Provides real-time data on movie titles and their streaming availability. [API Docs](https://api.watchmode.com/docs)
+## 🌐Third-party integration
+- **Watchmode API**: Provides real-time data on movie titles and their streaming availability. 
+- [API Docs](https://api.watchmode.com/docs)
 
 ## 🎯 Project Goal
 STREAMFINDER aims to eliminate the frustration of manually checking multiple streaming platforms to find a specific movie. Whether you're winding down on a Friday night or planning a movie marathon, this app streamlines the search process by aggregating streaming data and helping users determine if they already subscribe to the service offering the movie.
