@@ -3,14 +3,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 # 🎬 STREAMFINDER
 
 ## 📌 Project Overview
-STREAMFINDER is a responsive full-stack web application designed to help users quickly find where a specific movie is available to stream. Users can search for movie titles and view streaming availability across platforms like Netflix, Hulu, Max, Peacock, Prime Video, Disney+, and more. Registered users can create a profile and save movies to a personal watchlist.
+STREAMFINDER is a responsive full-stack web application designed to help users quickly find where a specific movie is available to stream. Registered users can search for movie titles and view streaming availability across platforms like Netflix, Hulu, Max, Peacock, Prime Video, Disney+, and more. Plus, registered users can create a profile and save movies to a personal watchlist.
 
 ## 🛠️ Tech Stack
 This project uses the **MERN stack** with a balanced focus on both front-end and back-end development:
 
 - **MongoDB**: Stores user data including profiles, favorites, and saved lists.
 - **Express & Node.js**: Handles server-side logic, API integration, and user authentication.
-- **React**: Powers the front-end interface for searching, filtering, and displaying results.
+- **React**: Powers the front-end interface for searching, displaying results, and viewing and editing the user watchlist.
 - **Next.js**: Manages server-side rendering and API routes.
 
 Third-party integration:
@@ -26,7 +26,6 @@ The application is designed for:
 - Anyone who enjoys organizing and tracking their movie watchlist
 
 ## 🔄 User Flow
-```text
-Sign Up → Log In → Search Movies → Save/Delete Movies from Watchlist → View Watchlist in Profile
+Sign Up → Log In → Search Movies → Save Movies to Watchlist → View Watchlist in Profile
 
 
